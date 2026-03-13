@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+<title>CTRL//HUB</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -16,12 +16,12 @@
     --amber-dim: rgba(245,158,11,0.15);
     --cyan:      #22d3ee;
     --cyan-dim:  rgba(34,211,238,0.12);
-    --red:       #f43f5e;
-    --green:     #4ade80;
     --text:      #e2e8f0;
     --muted:     #64748b;
     --radius:    16px;
   }
+
+  html, body { height: 100%; }
 
   body {
     background: var(--bg);
@@ -33,69 +33,135 @@
     align-items: center;
     justify-content: center;
     padding: 32px 24px;
-    gap: 28px;
+    gap: 24px;
     overflow-x: hidden;
+    position: relative;
   }
 
-  /* Ambient background orbs */
-  body::before, body::after {
-    content: '';
+  /* ── PARTICLE CANVAS ── */
+  #particleCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Ambient orbs */
+  .orb {
     position: fixed;
     border-radius: 50%;
-    filter: blur(120px);
+    filter: blur(130px);
     pointer-events: none;
     z-index: 0;
   }
-  body::before {
-    width: 600px; height: 600px;
-    background: rgba(245,158,11,0.06);
-    top: -200px; left: -150px;
+  .orb-1 {
+    width: 580px; height: 580px;
+    background: rgba(245,158,11,0.07);
+    top: -220px; left: -160px;
+    animation: orbBreath 8s ease-in-out infinite;
   }
-  body::after {
-    width: 500px; height: 500px;
-    background: rgba(34,211,238,0.05);
-    bottom: -150px; right: -100px;
+  .orb-2 {
+    width: 480px; height: 480px;
+    background: rgba(34,211,238,0.055);
+    bottom: -160px; right: -120px;
+    animation: orbBreath 8s ease-in-out infinite;
+    animation-delay: -4s;
+  }
+  .orb-3 {
+    width: 320px; height: 320px;
+    background: rgba(245,158,11,0.04);
+    top: 50%; left: 60%;
+    transform: translate(-50%, -50%);
+    animation: orbBreath 11s ease-in-out infinite;
+    animation-delay: -2s;
+  }
+  @keyframes orbBreath {
+    0%, 100% { opacity: 0.7; }
+    50%       { opacity: 1; }
   }
 
+  /* ── DASHBOARD ── */
   .dashboard {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 900px;
+    max-width: 960px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
   }
 
-  /* Header */
+  /* ── HEADER ── */
   .header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    padding: 0 4px;
+    gap: 20px;
+    flex-wrap: wrap;
   }
+  .header-left { display: flex; flex-direction: column; gap: 6px; }
   .logo {
     font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    color: var(--muted);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.3em; color: var(--muted);
     text-transform: uppercase;
   }
   .logo span { color: var(--amber); }
   .date-display {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    text-transform: uppercase;
+    font-size: 12px; letter-spacing: 0.12em;
+    color: var(--muted); text-transform: uppercase;
   }
 
-  /* Card */
+  /* ── WORLD CLOCK ── */
+  .world-clock {
+    display: flex; gap: 6px;
+    align-items: stretch;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .tz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    text-align: center;
+    min-width: 76px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+  }
+  .tz-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  }
+  .tz-card.home {
+    border-color: rgba(245,158,11,0.3);
+    background: rgba(245,158,11,0.06);
+  }
+  .tz-card.home .tz-time { color: var(--amber); }
+  .tz-city {
+    font-size: 9px; letter-spacing: 0.22em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .tz-time {
+    font-family: 'Orbitron', monospace;
+    font-size: 15px; font-weight: 700;
+    letter-spacing: 0.05em; color: var(--text); line-height: 1;
+  }
+  .tz-offset {
+    font-size: 9px; color: var(--cyan);
+    letter-spacing: 0.1em; margin-top: 4px; min-height: 12px;
+  }
+
+  /* ── CARD ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
     padding: 32px;
     position: relative;
     overflow: hidden;
@@ -103,35 +169,25 @@
   .card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
+    top: 0; left: 0; right: 0; height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
   }
 
-  /* ── CLOCK ── */
-  .clock-card {
-    text-align: center;
-    padding: 40px 32px;
-  }
+  /* ── MAIN CLOCK ── */
+  .clock-card { text-align: center; padding: 40px 32px; }
   .clock-label {
-    font-size: 10px;
-    letter-spacing: 0.4em;
-    color: var(--muted);
-    text-transform: uppercase;
+    font-size: 10px; letter-spacing: 0.4em;
+    color: var(--muted); text-transform: uppercase;
     margin-bottom: 16px;
   }
   .clock-time {
     font-family: 'Orbitron', monospace;
     font-size: clamp(64px, 12vw, 112px);
-    font-weight: 900;
-    letter-spacing: 0.04em;
-    line-height: 1;
+    font-weight: 900; letter-spacing: 0.04em; line-height: 1;
     background: linear-gradient(135deg, #fff 30%, var(--amber) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: none;
-    position: relative;
   }
   .clock-time .colon {
     animation: blink 1s step-end infinite;
@@ -139,147 +195,124 @@
     -webkit-text-fill-color: var(--amber);
   }
   @keyframes blink { 50% { opacity: 0.2; } }
-
   .clock-seconds {
     font-family: 'Orbitron', monospace;
-    font-size: 22px;
-    font-weight: 400;
-    color: var(--amber);
-    margin-top: 8px;
-    letter-spacing: 0.2em;
-    opacity: 0.7;
+    font-size: 22px; font-weight: 400;
+    color: var(--amber); margin-top: 8px;
+    letter-spacing: 0.2em; opacity: 0.7;
   }
 
   /* ── POMODORO ── */
-  .pomo-card { }
   .pomo-header {
-    display: flex;
-    align-items: center;
+    display: flex; align-items: center;
     justify-content: space-between;
     margin-bottom: 28px;
+    flex-wrap: wrap; gap: 10px;
   }
   .pomo-title {
-    font-size: 10px;
-    letter-spacing: 0.4em;
-    color: var(--muted);
-    text-transform: uppercase;
+    font-size: 10px; letter-spacing: 0.4em;
+    color: var(--muted); text-transform: uppercase;
   }
-  .pomo-sessions {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
+  .pomo-sessions { display: flex; gap: 6px; align-items: center; }
   .session-dot {
     width: 8px; height: 8px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border);
+    border-radius: 50%; border: 1.5px solid var(--border);
     transition: all 0.3s ease;
   }
-  .session-dot.done { background: var(--amber); border-color: var(--amber); }
+  .session-dot.done    { background: var(--amber); border-color: var(--amber); }
   .session-dot.current { border-color: var(--amber); box-shadow: 0 0 8px var(--amber); }
 
   .pomo-body {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    flex-wrap: wrap;
+    display: flex; align-items: center;
+    gap: 40px; flex-wrap: wrap;
   }
 
-  /* SVG ring */
-  .pomo-ring-wrap {
-    position: relative;
-    flex-shrink: 0;
-  }
+  /* Ring */
+  .pomo-ring-wrap { position: relative; flex-shrink: 0; }
   .pomo-ring-wrap svg { transform: rotate(-90deg); }
   .ring-bg { fill: none; stroke: rgba(255,255,255,0.06); }
   .ring-progress {
-    fill: none;
-    stroke-linecap: round;
+    fill: none; stroke-linecap: round;
     transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
   }
   .ring-center {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 4px;
   }
   .pomo-countdown {
     font-family: 'Orbitron', monospace;
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--text);
-    line-height: 1;
+    font-size: 36px; font-weight: 700;
+    letter-spacing: 0.04em; color: var(--text); line-height: 1;
   }
   .pomo-mode-label {
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    color: var(--muted);
-    text-transform: uppercase;
+    font-size: 10px; letter-spacing: 0.3em;
+    color: var(--muted); text-transform: uppercase;
   }
 
   .pomo-controls {
-    flex: 1;
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    flex: 1; min-width: 220px;
+    display: flex; flex-direction: column; gap: 14px;
   }
 
-  /* Mode tabs */
+  /* Tabs */
   .pomo-tabs {
-    display: flex;
-    gap: 6px;
+    display: flex; gap: 6px;
     background: rgba(255,255,255,0.04);
-    border-radius: 10px;
-    padding: 4px;
+    border-radius: 10px; padding: 4px;
   }
   .pomo-tab {
-    flex: 1;
-    padding: 8px 6px;
-    border: none;
-    border-radius: 7px;
-    background: transparent;
-    color: var(--muted);
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    transition: all 0.25s ease;
+    flex: 1; padding: 8px 6px;
+    border: none; border-radius: 7px;
+    background: transparent; color: var(--muted);
+    font-family: 'Syne', sans-serif; font-size: 11px;
+    font-weight: 600; letter-spacing: 0.08em;
+    cursor: pointer; transition: all 0.25s ease;
     text-transform: uppercase;
   }
   .pomo-tab.active {
-    background: var(--amber-dim);
-    color: var(--amber);
+    background: var(--amber-dim); color: var(--amber);
     box-shadow: 0 0 12px rgba(245,158,11,0.2);
   }
   .pomo-tab:hover:not(.active) { color: var(--text); }
 
-  /* Buttons */
-  .pomo-btn-row {
-    display: flex;
-    gap: 10px;
+  /* Custom durations */
+  .duration-row { display: flex; gap: 8px; }
+  .duration-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .duration-label {
+    font-size: 9px; letter-spacing: 0.25em;
+    color: var(--muted); text-transform: uppercase;
   }
-  .btn {
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+  .duration-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 4px; color: var(--text);
+    font-family: 'Orbitron', monospace;
+    font-size: 14px; font-weight: 700; width: 100%;
+    text-align: center; outline: none;
+    transition: border-color 0.2s;
+    -moz-appearance: textfield;
+  }
+  .duration-input::-webkit-outer-spin-button,
+  .duration-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .duration-input:focus { border-color: var(--amber); }
+  .duration-unit {
+    font-size: 8px; letter-spacing: 0.2em;
+    color: var(--muted); text-align: center;
     text-transform: uppercase;
+  }
+
+  /* Buttons */
+  .pomo-btn-row { display: flex; gap: 10px; }
+  .btn {
+    border: none; border-radius: 10px; cursor: pointer;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
     transition: all 0.2s ease;
   }
   .btn-primary {
-    flex: 1;
-    padding: 14px;
-    font-size: 13px;
-    background: var(--amber);
-    color: #0a0a0f;
+    flex: 1; padding: 14px; font-size: 13px;
+    background: var(--amber); color: #0a0a0f;
     box-shadow: 0 0 24px rgba(245,158,11,0.25);
   }
   .btn-primary:hover {
@@ -287,113 +320,122 @@
     box-shadow: 0 0 32px rgba(245,158,11,0.4);
     transform: translateY(-1px);
   }
-  .btn-primary:active { transform: translateY(0); }
   .btn-primary.running {
-    background: var(--surface);
-    color: var(--amber);
+    background: var(--surface); color: var(--amber);
     border: 1px solid var(--amber);
     box-shadow: 0 0 16px rgba(245,158,11,0.15);
   }
-
   .btn-secondary {
-    padding: 14px 18px;
-    font-size: 13px;
-    background: var(--surface);
-    color: var(--muted);
+    padding: 14px 18px; font-size: 13px;
+    background: var(--surface); color: var(--muted);
     border: 1px solid var(--border);
   }
   .btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
 
-  /* Stats row */
-  .pomo-stats {
-    display: flex;
-    gap: 8px;
-  }
+  /* Stats */
+  .pomo-stats { display: flex; gap: 8px; }
   .stat-pill {
-    flex: 1;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+    flex: 1; background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; display: flex; flex-direction: column; gap: 2px;
   }
   .stat-val {
-    font-family: 'Orbitron', monospace;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text);
+    font-family: 'Orbitron', monospace; font-size: 18px;
+    font-weight: 700; color: var(--text);
   }
   .stat-lbl {
-    font-size: 9px;
-    letter-spacing: 0.25em;
-    color: var(--muted);
-    text-transform: uppercase;
+    font-size: 9px; letter-spacing: 0.25em;
+    color: var(--muted); text-transform: uppercase;
   }
 
-  /* Break indicator */
+  /* Break mode */
   .pomo-card.break-mode .ring-progress { stroke: var(--cyan) !important; }
   .pomo-card.break-mode .pomo-tab.active {
-    background: var(--cyan-dim);
-    color: var(--cyan);
+    background: var(--cyan-dim); color: var(--cyan);
     box-shadow: 0 0 12px rgba(34,211,238,0.2);
   }
-  .pomo-card.break-mode .btn-primary {
-    background: var(--cyan);
-    box-shadow: 0 0 24px rgba(34,211,238,0.25);
-  }
+  .pomo-card.break-mode .btn-primary { background: var(--cyan); box-shadow: 0 0 24px rgba(34,211,238,0.25); }
   .pomo-card.break-mode .btn-primary:hover { background: #67e8f9; }
   .pomo-card.break-mode .btn-primary.running {
-    background: var(--surface);
-    color: var(--cyan);
-    border-color: var(--cyan);
+    background: var(--surface); color: var(--cyan); border-color: var(--cyan);
   }
+  .pomo-card.break-mode .duration-input:focus { border-color: var(--cyan); }
 
-  /* Notification flash */
+  /* Flash */
   .flash-overlay {
     position: fixed; inset: 0;
-    background: rgba(245,158,11,0.08);
-    pointer-events: none;
-    opacity: 0;
-    z-index: 999;
-    transition: opacity 0.3s;
+    background: rgba(245,158,11,0.07);
+    pointer-events: none; opacity: 0; z-index: 999;
   }
-  .flash-overlay.flash { animation: flash-anim 0.8s ease; }
-  @keyframes flash-anim {
-    0%,100% { opacity: 0; } 20%,60% { opacity: 1; }
-  }
+  .flash-overlay.flash { animation: flash-anim 0.9s ease forwards; }
+  @keyframes flash-anim { 0%,100%{opacity:0;} 25%,65%{opacity:1;} }
 
   /* Footer */
   .footer {
-    text-align: center;
-    font-size: 10px;
+    text-align: center; font-size: 10px;
     letter-spacing: 0.25em;
-    color: rgba(100,116,139,0.4);
+    color: rgba(100,116,139,0.35);
     text-transform: uppercase;
   }
 
-  @media (max-width: 560px) {
+  @media (max-width: 600px) {
     .pomo-body { flex-direction: column; align-items: center; }
     .pomo-controls { width: 100%; }
-    .clock-seconds { font-size: 16px; }
+    .world-clock { justify-content: flex-start; }
+    .header { flex-direction: column; }
   }
 </style>
 </head>
 <body>
 
+<canvas id="particleCanvas"></canvas>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 <div class="flash-overlay" id="flashOverlay"></div>
 
 <div class="dashboard">
+
+  <!-- HEADER: logo + world clock -->
   <div class="header">
-    <div class="logo">CTRL<span>//</span>HUB</div>
-    <div class="date-display" id="dateDisplay">—</div>
+    <div class="header-left">
+      <div class="logo">CTRL<span>//</span>HUB</div>
+      <div class="date-display" id="dateDisplay">—</div>
+    </div>
+
+    <div class="world-clock">
+      <div class="tz-card home">
+        <div class="tz-city">London</div>
+        <div class="tz-time"  id="tz-london">--:--</div>
+        <div class="tz-offset" id="od-london"></div>
+      </div>
+      <div class="tz-card">
+        <div class="tz-city">New York</div>
+        <div class="tz-time"  id="tz-newyork">--:--</div>
+        <div class="tz-offset" id="od-newyork"></div>
+      </div>
+      <div class="tz-card">
+        <div class="tz-city">Dubai</div>
+        <div class="tz-time"  id="tz-dubai">--:--</div>
+        <div class="tz-offset" id="od-dubai"></div>
+      </div>
+      <div class="tz-card">
+        <div class="tz-city">Tokyo</div>
+        <div class="tz-time"  id="tz-tokyo">--:--</div>
+        <div class="tz-offset" id="od-tokyo"></div>
+      </div>
+      <div class="tz-card">
+        <div class="tz-city">Sydney</div>
+        <div class="tz-time"  id="tz-sydney">--:--</div>
+        <div class="tz-offset" id="od-sydney"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- CLOCK -->
+  <!-- MAIN CLOCK -->
   <div class="card clock-card">
     <div class="clock-label">System Time</div>
-    <div class="clock-time" id="clockTime">
+    <div class="clock-time">
       <span id="clockHH">00</span><span class="colon">:</span><span id="clockMM">00</span>
     </div>
     <div class="clock-seconds" id="clockSS">00</div>
@@ -407,16 +449,12 @@
     </div>
 
     <div class="pomo-body">
-      <!-- Ring -->
       <div class="pomo-ring-wrap">
         <svg width="180" height="180" viewBox="0 0 180 180">
           <circle class="ring-bg" cx="90" cy="90" r="78" stroke-width="10"/>
           <circle class="ring-progress" id="ringProgress"
-            cx="90" cy="90" r="78"
-            stroke-width="10"
-            stroke="#f59e0b"
-            stroke-dasharray="490"
-            stroke-dashoffset="0"/>
+            cx="90" cy="90" r="78" stroke-width="10"
+            stroke="#f59e0b" stroke-dasharray="490.09" stroke-dashoffset="0"/>
         </svg>
         <div class="ring-center">
           <div class="pomo-countdown" id="pomoCountdown">25:00</div>
@@ -424,12 +462,32 @@
         </div>
       </div>
 
-      <!-- Controls -->
       <div class="pomo-controls">
         <div class="pomo-tabs">
           <button class="pomo-tab active" data-mode="focus" onclick="setMode('focus')">Focus</button>
           <button class="pomo-tab" data-mode="short" onclick="setMode('short')">Short</button>
-          <button class="pomo-tab" data-mode="long" onclick="setMode('long')">Long</button>
+          <button class="pomo-tab" data-mode="long"  onclick="setMode('long')">Long</button>
+        </div>
+
+        <div class="duration-row">
+          <div class="duration-group">
+            <div class="duration-label">Focus</div>
+            <input class="duration-input" id="inputFocus" type="number" min="1" max="99" value="25"
+              onchange="onDurationChange('focus')" onfocus="this.select()">
+            <div class="duration-unit">min</div>
+          </div>
+          <div class="duration-group">
+            <div class="duration-label">Short</div>
+            <input class="duration-input" id="inputShort" type="number" min="1" max="99" value="5"
+              onchange="onDurationChange('short')" onfocus="this.select()">
+            <div class="duration-unit">min</div>
+          </div>
+          <div class="duration-group">
+            <div class="duration-label">Long</div>
+            <input class="duration-input" id="inputLong" type="number" min="1" max="99" value="15"
+              onchange="onDurationChange('long')" onfocus="this.select()">
+            <div class="duration-unit">min</div>
+          </div>
         </div>
 
         <div class="pomo-btn-row">
@@ -455,15 +513,153 @@
     </div>
   </div>
 
-  <div class="footer">v1.0 &nbsp;·&nbsp; more modules coming</div>
+  <div class="footer">v2.0 &nbsp;·&nbsp; world clock &nbsp;·&nbsp; custom sessions &nbsp;·&nbsp; particle field</div>
 </div>
 
 <script>
-// ─── CLOCK ───────────────────────────────────────────────────────────────────
-const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+// ═══════════════════════════════════
+//  PARTICLE BACKGROUND
+// ═══════════════════════════════════
+(function () {
+  const canvas = document.getElementById('particleCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H;
 
-function pad(n) { return String(n).padStart(2,'0'); }
+  const COUNT = 85;
+  const CONN_DIST  = 130;
+  const CONN_PROB  = 0.0035;
+  const MAX_CONNS  = 7;
+
+  let particles  = [];
+  let connFlares = []; // {a,b,life,max}
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function mkParticle(startLow) {
+    const r = Math.random();
+    const type = r < 0.08 ? 'amber' : r < 0.14 ? 'cyan' : 'white';
+    return {
+      x:     Math.random() * W,
+      y:     startLow ? H + Math.random() * H * 0.3 : Math.random() * H,
+      r:     Math.random() * 1.5 + 0.4,
+      vx:    (Math.random() - 0.5) * 0.15,
+      vy:    -(Math.random() * 0.22 + 0.05),
+      alpha: Math.random() * 0.38 + 0.05,
+      type,
+      phase:      Math.random() * Math.PI * 2,
+      phaseSpeed: 0.007 + Math.random() * 0.013,
+    };
+  }
+
+  function colorRgb(type) {
+    if (type === 'amber') return '245,158,11';
+    if (type === 'cyan')  return '34,211,238';
+    return '200,215,235';
+  }
+
+  function init() {
+    particles  = Array.from({ length: COUNT }, () => mkParticle(false));
+    connFlares = [];
+  }
+
+  function trySpawnConn() {
+    if (connFlares.length >= MAX_CONNS) return;
+    const ai = Math.floor(Math.random() * COUNT);
+    const bi = Math.floor(Math.random() * COUNT);
+    if (ai === bi) return;
+    const pa = particles[ai], pb = particles[bi];
+    const dx = pa.x - pb.x, dy = pa.y - pb.y;
+    if (dx*dx + dy*dy < CONN_DIST*CONN_DIST && Math.random() < CONN_PROB) {
+      connFlares.push({ a: ai, b: bi, life: 0, max: 80 + Math.random() * 70 });
+    }
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw connection flares
+    connFlares = connFlares.filter(c => c.life < c.max);
+    connFlares.forEach(c => {
+      c.life++;
+      const t = c.life / c.max;
+      const a = Math.sin(t * Math.PI) * 0.16;
+      const pa = particles[c.a], pb = particles[c.b];
+      ctx.beginPath();
+      ctx.moveTo(pa.x, pa.y);
+      ctx.lineTo(pb.x, pb.y);
+      ctx.strokeStyle = `rgba(245,158,11,${a})`;
+      ctx.lineWidth   = 0.7;
+      ctx.stroke();
+    });
+
+    // Update & draw particles
+    particles.forEach((p, i) => {
+      p.phase += p.phaseSpeed;
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Wrap horizontally
+      if (p.x < -20)    p.x = W + 10;
+      if (p.x > W + 20) p.x = -10;
+
+      // Reset when off top
+      if (p.y < -12) {
+        particles[i] = mkParticle(true);
+        return;
+      }
+
+      // Fade near top
+      let alpha = p.alpha;
+      if (p.y < H * 0.12) alpha *= p.y / (H * 0.12);
+
+      // Pulse for accent dots
+      const pulse = p.type !== 'white' ? 0.5 + 0.5 * Math.sin(p.phase) : 1;
+      alpha *= pulse;
+
+      const rgb = colorRgb(p.type);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${rgb},${alpha})`;
+      ctx.fill();
+
+      // Soft glow for amber/cyan
+      if (p.type !== 'white' && alpha > 0.12) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${rgb},${alpha * 0.07})`;
+        ctx.fill();
+      }
+
+      trySpawnConn();
+    });
+
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  init();
+  requestAnimationFrame(frame);
+  window.addEventListener('resize', resize);
+})();
+
+// ═══════════════════════════════════
+//  CLOCK + WORLD CLOCK
+// ═══════════════════════════════════
+const DAY_NAMES   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+const TZ_LIST = [
+  { id: 'london',  iana: 'Europe/London'    },
+  { id: 'newyork', iana: 'America/New_York'  },
+  { id: 'dubai',   iana: 'Asia/Dubai'        },
+  { id: 'tokyo',   iana: 'Asia/Tokyo'        },
+  { id: 'sydney',  iana: 'Australia/Sydney'  },
+];
+
+function pad(n) { return String(n).padStart(2, '0'); }
 
 function updateClock() {
   const now = new Date();
@@ -471,68 +667,98 @@ function updateClock() {
   document.getElementById('clockMM').textContent = pad(now.getMinutes());
   document.getElementById('clockSS').textContent = pad(now.getSeconds());
   document.getElementById('dateDisplay').textContent =
-    `${DAYS[now.getDay()]}  ·  ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+    `${DAY_NAMES[now.getDay()]}  ·  ${MONTH_NAMES[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+  const londonDate = now.toLocaleDateString('en-GB', { timeZone: 'Europe/London' });
+
+  TZ_LIST.forEach(zone => {
+    const timeStr = now.toLocaleTimeString('en-GB', {
+      timeZone: zone.iana, hour: '2-digit', minute: '2-digit', hour12: false
+    });
+    document.getElementById(`tz-${zone.id}`).textContent = timeStr;
+
+    const zoneDate = now.toLocaleDateString('en-GB', { timeZone: zone.iana });
+    const odEl     = document.getElementById(`od-${zone.id}`);
+
+    if (zone.id === 'london' || zoneDate === londonDate) {
+      odEl.textContent = '';
+    } else {
+      const parse = s => { const [d,m,y] = s.split('/').map(Number); return new Date(y,m-1,d); };
+      const diff  = Math.round((parse(zoneDate) - parse(londonDate)) / 86400000);
+      odEl.textContent = diff > 0 ? `+${diff}d` : `${diff}d`;
+    }
+  });
 }
+
 updateClock();
 setInterval(updateClock, 1000);
 
-// ─── POMODORO ────────────────────────────────────────────────────────────────
-const MODES = {
-  focus: { label: 'Focus',       secs: 25 * 60, break: false },
-  short: { label: 'Short Break', secs:  5 * 60, break: true  },
-  long:  { label: 'Long Break',  secs: 15 * 60, break: true  },
-};
+// ═══════════════════════════════════
+//  POMODORO
+// ═══════════════════════════════════
+const DEFAULTS = { focus: 25, short: 5, long: 15 };
+const LABELS   = { focus: 'Focus', short: 'Short Break', long: 'Long Break' };
+const IS_BREAK = { focus: false, short: true, long: true };
 
-let currentMode  = 'focus';
-let totalSecs    = MODES.focus.secs;
-let remaining    = totalSecs;
-let running      = false;
-let timerID      = null;
+let currentMode       = 'focus';
+let totalSecs         = 25 * 60;
+let remaining         = totalSecs;
+let running           = false;
+let timerID           = null;
 let completedSessions = 0;
 let focusedMinutes    = 0;
 let streak            = 0;
 
-const CIRCUMFERENCE = 2 * Math.PI * 78; // ~490
+const CIRCUM = 2 * Math.PI * 78;
 
-const ringEl     = document.getElementById('ringProgress');
-const countdownEl= document.getElementById('pomoCountdown');
-const modeLabel  = document.getElementById('pomoModeLabel');
-const startBtn   = document.getElementById('startBtn');
-const pomoCard   = document.getElementById('pomoCard');
+const ringEl      = document.getElementById('ringProgress');
+const countdownEl = document.getElementById('pomoCountdown');
+const modeLabelEl = document.getElementById('pomoModeLabel');
+const startBtn    = document.getElementById('startBtn');
+const pomoCard    = document.getElementById('pomoCard');
+
+function getMins(mode) {
+  const map = { focus: 'inputFocus', short: 'inputShort', long: 'inputLong' };
+  const v   = parseInt(document.getElementById(map[mode]).value, 10);
+  return (!isNaN(v) && v >= 1) ? Math.min(v, 99) : DEFAULTS[mode];
+}
 
 function setMode(mode) {
-  if (running) return; // prevent switching mid-run
-  currentMode = mode;
-  totalSecs   = MODES[mode].secs;
-  remaining   = totalSecs;
-  updateRing();
-  updateDisplay();
-  modeLabel.textContent = MODES[mode].label;
+  if (running) return;
+  currentMode      = mode;
+  totalSecs        = getMins(mode) * 60;
+  remaining        = totalSecs;
+  modeLabelEl.textContent = LABELS[mode];
+  document.querySelectorAll('.pomo-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.mode === mode));
 
-  document.querySelectorAll('.pomo-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.mode === mode);
-  });
-
-  if (MODES[mode].break) {
+  if (IS_BREAK[mode]) {
     pomoCard.classList.add('break-mode');
     ringEl.style.stroke = '#22d3ee';
   } else {
     pomoCard.classList.remove('break-mode');
     ringEl.style.stroke = '#f59e0b';
   }
+  updateDisplay();
+  updateRing();
+}
+
+function onDurationChange(mode) {
+  if (mode === currentMode && !running) {
+    totalSecs = getMins(mode) * 60;
+    remaining = totalSecs;
+    updateDisplay();
+    updateRing();
+  }
 }
 
 function updateDisplay() {
-  const m = Math.floor(remaining / 60);
-  const s = remaining % 60;
-  countdownEl.textContent = `${pad(m)}:${pad(s)}`;
+  countdownEl.textContent = `${pad(Math.floor(remaining/60))}:${pad(remaining%60)}`;
 }
 
 function updateRing() {
-  const pct = remaining / totalSecs;
-  const offset = CIRCUMFERENCE * (1 - pct);
-  ringEl.style.strokeDasharray  = CIRCUMFERENCE;
-  ringEl.style.strokeDashoffset = offset;
+  ringEl.style.strokeDasharray  = CIRCUM;
+  ringEl.style.strokeDashoffset = CIRCUM * (1 - remaining / totalSecs);
 }
 
 function toggleTimer() {
@@ -550,80 +776,62 @@ function toggleTimer() {
 }
 
 function tick() {
-  if (remaining <= 0) {
-    clearInterval(timerID);
-    running = false;
-    onComplete();
-    return;
-  }
+  if (remaining <= 0) { clearInterval(timerID); running = false; onComplete(); return; }
   remaining--;
   updateDisplay();
   updateRing();
 }
 
 function onComplete() {
-  playBeep();
-  flash();
+  playBeep(); flash();
   startBtn.textContent = 'Start';
   startBtn.classList.remove('running');
 
   if (currentMode === 'focus') {
     completedSessions++;
-    focusedMinutes += 25;
+    focusedMinutes += getMins('focus');
     streak++;
     document.getElementById('statSessions').textContent = completedSessions;
     document.getElementById('statFocused').textContent  = focusedMinutes + 'm';
     document.getElementById('statStreak').textContent   = streak;
     renderDots();
+    setMode(completedSessions % 4 === 0 ? 'long' : 'short');
   } else {
-    // After a break, switch back to focus automatically
     setMode('focus');
-    return;
-  }
-
-  // After 4 sessions suggest long break
-  if (completedSessions % 4 === 0) {
-    setMode('long');
-  } else {
-    setMode('short');
   }
 }
 
 function resetTimer() {
-  clearInterval(timerID);
-  running = false;
+  clearInterval(timerID); running = false;
+  totalSecs = getMins(currentMode) * 60;
   remaining = totalSecs;
-  updateDisplay();
-  updateRing();
+  updateDisplay(); updateRing();
   startBtn.textContent = 'Start';
   startBtn.classList.remove('running');
 }
 
 function renderDots() {
-  const container = document.getElementById('sessionDots');
-  container.innerHTML = '';
-  const show = Math.min(completedSessions + 1, 8);
-  for (let i = 0; i < show; i++) {
+  const c = document.getElementById('sessionDots');
+  c.innerHTML = '';
+  const n = Math.min(completedSessions + 1, 8);
+  for (let i = 0; i < n; i++) {
     const d = document.createElement('div');
-    d.className = 'session-dot';
-    if (i < completedSessions) d.classList.add('done');
-    else d.classList.add('current');
-    container.appendChild(d);
+    d.className = 'session-dot' + (i < completedSessions ? ' done' : ' current');
+    c.appendChild(d);
   }
 }
 
-// ─── AUDIO ───────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════
+//  AUDIO + FLASH
+// ═══════════════════════════════════
 function playBeep() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const tones = [523.25, 659.25, 783.99]; // C5, E5, G5
-    tones.forEach((freq, i) => {
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.type = 'sine';
-      o.frequency.value = freq;
-      const t = ctx.currentTime + i * 0.18;
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    [[523.25, 0], [659.25, 0.18], [783.99, 0.36]].forEach(([freq, delay]) => {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.connect(g); g.connect(ac.destination);
+      o.type = 'sine'; o.frequency.value = freq;
+      const t = ac.currentTime + delay;
       g.gain.setValueAtTime(0, t);
       g.gain.linearRampToValueAtTime(0.25, t + 0.04);
       g.gain.linearRampToValueAtTime(0, t + 0.22);
@@ -632,7 +840,6 @@ function playBeep() {
   } catch(e) {}
 }
 
-// ─── FLASH ───────────────────────────────────────────────────────────────────
 function flash() {
   const el = document.getElementById('flashOverlay');
   el.classList.remove('flash');
