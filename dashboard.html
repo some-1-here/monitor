@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -310,6 +311,86 @@
     color: rgba(100,116,139,0.3);
     text-transform: uppercase;
   }
+  /* ── PI STATS PANEL ── */
+  .pi-panel {
+    position: fixed;
+    bottom: 28px; left: 28px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 195px;
+  }
+  .pi-panel-title {
+    font-size: 9px; letter-spacing: 0.35em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 2px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pi-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--muted); flex-shrink: 0;
+    transition: background 0.5s, box-shadow 0.5s;
+  }
+  .pi-dot.live { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+  .pi-dot.dead { background: #f43f5e; }
+  .pi-stat-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    position: relative; overflow: hidden;
+  }
+  .pi-stat-row::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  }
+  .pi-stat-top {
+    display: flex; justify-content: space-between;
+    align-items: baseline; margin-bottom: 6px;
+  }
+  .pi-stat-name {
+    font-size: 9px; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .pi-stat-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px; font-weight: 700; color: var(--text);
+  }
+  .pi-bar-track {
+    height: 3px; background: rgba(255,255,255,0.06);
+    border-radius: 2px; overflow: hidden;
+  }
+  .pi-bar-fill {
+    height: 100%; border-radius: 2px;
+    background: var(--amber);
+    transition: width 1.2s ease, background 0.5s;
+  }
+  .pi-bar-fill.warn { background: #fb923c; }
+  .pi-bar-fill.crit { background: #f43f5e; }
+  .pi-bar-fill.cyan { background: var(--cyan); }
+  .pi-info-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .pi-info-name {
+    font-size: 9px; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .pi-info-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px; font-weight: 700; color: var(--text);
+  }
+  .pi-offline {
+    font-size: 9px; letter-spacing: 0.15em;
+    color: var(--muted); text-transform: uppercase;
+    text-align: center; padding: 6px 0; opacity: 0.6;
+  }
   @media (max-width: 620px) {
     .pomo-body { flex-direction: column; align-items: center; }
     .pomo-controls { width: 100%; }
@@ -322,6 +403,7 @@
 <body>
 
 <canvas id="bgCanvas"></canvas>
+
 <div class="flash-overlay" id="flashOverlay"></div>
 
 <div class="dashboard">
@@ -433,7 +515,19 @@
     </div>
   </div>
 
-  <div class="footer">v3.0 &nbsp;·&nbsp; universal build</div>
+  <div class="footer">v4.0 &nbsp;·&nbsp; pi stats</div>
+</div>
+
+<!-- PI STATS PANEL fixed bottom left -->
+
+<div class="pi-panel" id="piPanel">
+  <div class="pi-panel-title">
+    <div class="pi-dot" id="piDot"></div>
+    Pi Monitor
+  </div>
+  <div id="piStatsInner">
+    <div class="pi-offline">Waiting for Pi server...</div>
+  </div>
 </div>
 
 <script>
@@ -707,7 +801,85 @@ function flash(){
   el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');
 }
 
+// ═══════════════════════════════════════════════
+//  PI STATS
+// ═══════════════════════════════════════════════
+const PI_URL = 'http://localhost:5050/stats';
+
+function barClass(val, warnAt, critAt) {
+  if (val >= critAt) return 'crit';
+  if (val >= warnAt) return 'warn';
+  return '';
+}
+
+function tempClass(t) {
+  if (t >= 75) return 'crit';
+  if (t >= 60) return 'warn';
+  return 'cyan';
+}
+
+function statRow(label, val, pct, barCls) {
+  return `
+  <div class="pi-stat-row">
+    <div class="pi-stat-top">
+      <div class="pi-stat-name">${label}</div>
+      <div class="pi-stat-val">${val}</div>
+    </div>
+    <div class="pi-bar-track">
+      <div class="pi-bar-fill ${barCls}" style="width:${pct}%"></div>
+    </div>
+  </div>`;
+}
+
+function infoRow(label, val) {
+  return `
+  <div class="pi-info-row">
+    <div class="pi-info-name">${label}</div>
+    <div class="pi-info-val">${val}</div>
+  </div>`;
+}
+
+function formatUptime(secs) {
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
+
+async function fetchPiStats() {
+  try {
+    const res  = await fetch(PI_URL, { signal: AbortSignal.timeout(2500) });
+    const data = await res.json();
+
+    document.getElementById('piDot').className = 'pi-dot live';
+
+    const cpuPct  = Math.round(data.cpu);
+    const ramPct  = Math.round(data.ram);
+    const temp    = parseFloat(data.temp).toFixed(1);
+    const freqMhz = Math.round(data.freq);
+    const ip      = data.ip || '—';
+    const uptime  = formatUptime(data.uptime);
+
+    document.getElementById('piStatsInner').innerHTML =
+      statRow('CPU',  cpuPct + '%',  cpuPct, barClass(cpuPct, 70, 90)) +
+      statRow('RAM',  ramPct + '%',  ramPct, barClass(ramPct, 70, 90)) +
+      statRow('Temp', temp + '°C',   Math.min(temp, 100), tempClass(temp)) +
+      infoRow('Freq',   freqMhz + ' MHz') +
+      infoRow('IP',     ip) +
+      infoRow('Uptime', uptime);
+
+  } catch (e) {
+    document.getElementById('piDot').className = 'pi-dot dead';
+    document.getElementById('piStatsInner').innerHTML =
+      '<div class="pi-offline">Server offline</div>';
+  }
+}
+
+fetchPiStats();
+setInterval(fetchPiStats, 3000);
+
 renderDots(); upDisp(); upRing();
 </script>
+
 </body>
 </html>
