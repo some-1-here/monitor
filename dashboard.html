@@ -7,10 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --bg:        #080810;
-    --surface:   rgba(255,255,255,0.035);
+    --surface:   rgba(255,255,255,0.038);
     --border:    rgba(255,255,255,0.08);
     --amber:     #f59e0b;
     --amber-dim: rgba(245,158,11,0.15);
@@ -20,9 +19,7 @@
     --muted:     #64748b;
     --radius:    16px;
   }
-
   html, body { height: 100%; }
-
   body {
     background: var(--bg);
     color: var(--text);
@@ -37,50 +34,13 @@
     overflow-x: hidden;
     position: relative;
   }
-
-  /* ── PARTICLE CANVAS ── */
-  #particleCanvas {
+  #bgCanvas {
     position: fixed;
     inset: 0;
     z-index: 0;
     pointer-events: none;
+    display: block;
   }
-
-  /* Ambient orbs */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(130px);
-    pointer-events: none;
-    z-index: 0;
-  }
-  .orb-1 {
-    width: 580px; height: 580px;
-    background: rgba(245,158,11,0.07);
-    top: -220px; left: -160px;
-    animation: orbBreath 8s ease-in-out infinite;
-  }
-  .orb-2 {
-    width: 480px; height: 480px;
-    background: rgba(34,211,238,0.055);
-    bottom: -160px; right: -120px;
-    animation: orbBreath 8s ease-in-out infinite;
-    animation-delay: -4s;
-  }
-  .orb-3 {
-    width: 320px; height: 320px;
-    background: rgba(245,158,11,0.04);
-    top: 50%; left: 60%;
-    transform: translate(-50%, -50%);
-    animation: orbBreath 11s ease-in-out infinite;
-    animation-delay: -2s;
-  }
-  @keyframes orbBreath {
-    0%, 100% { opacity: 0.7; }
-    50%       { opacity: 1; }
-  }
-
-  /* ── DASHBOARD ── */
   .dashboard {
     position: relative;
     z-index: 1;
@@ -90,8 +50,6 @@
     flex-direction: column;
     gap: 20px;
   }
-
-  /* ── HEADER ── */
   .header {
     display: flex;
     align-items: flex-start;
@@ -111,8 +69,6 @@
     font-size: 12px; letter-spacing: 0.12em;
     color: var(--muted); text-transform: uppercase;
   }
-
-  /* ── WORLD CLOCK ── */
   .world-clock {
     display: flex; gap: 6px;
     align-items: stretch;
@@ -128,7 +84,6 @@
     min-width: 76px;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(10px);
   }
   .tz-card::before {
     content: '';
@@ -137,8 +92,8 @@
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
   }
   .tz-card.home {
-    border-color: rgba(245,158,11,0.3);
-    background: rgba(245,158,11,0.06);
+    border-color: rgba(245,158,11,0.35);
+    background: rgba(245,158,11,0.07);
   }
   .tz-card.home .tz-time { color: var(--amber); }
   .tz-city {
@@ -155,13 +110,10 @@
     font-size: 9px; color: var(--cyan);
     letter-spacing: 0.1em; margin-top: 4px; min-height: 12px;
   }
-
-  /* ── CARD ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    backdrop-filter: blur(14px);
     padding: 32px;
     position: relative;
     overflow: hidden;
@@ -172,8 +124,6 @@
     top: 0; left: 0; right: 0; height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
   }
-
-  /* ── MAIN CLOCK ── */
   .clock-card { text-align: center; padding: 40px 32px; }
   .clock-label {
     font-size: 10px; letter-spacing: 0.4em;
@@ -184,7 +134,7 @@
     font-family: 'Orbitron', monospace;
     font-size: clamp(64px, 12vw, 112px);
     font-weight: 900; letter-spacing: 0.04em; line-height: 1;
-    background: linear-gradient(135deg, #fff 30%, var(--amber) 100%);
+    background: linear-gradient(135deg, #ffffff 30%, #f59e0b 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -192,17 +142,15 @@
   .clock-time .colon {
     animation: blink 1s step-end infinite;
     display: inline-block;
-    -webkit-text-fill-color: var(--amber);
+    -webkit-text-fill-color: #f59e0b;
   }
-  @keyframes blink { 50% { opacity: 0.2; } }
+  @keyframes blink { 50% { opacity: 0.15; } }
   .clock-seconds {
     font-family: 'Orbitron', monospace;
     font-size: 22px; font-weight: 400;
-    color: var(--amber); margin-top: 8px;
-    letter-spacing: 0.2em; opacity: 0.7;
+    color: var(--amber); margin-top: 10px;
+    letter-spacing: 0.2em; opacity: 0.65;
   }
-
-  /* ── POMODORO ── */
   .pomo-header {
     display: flex; align-items: center;
     justify-content: space-between;
@@ -215,21 +163,18 @@
   }
   .pomo-sessions { display: flex; gap: 6px; align-items: center; }
   .session-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%; border: 1.5px solid var(--border);
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 1.5px solid var(--border);
     transition: all 0.3s ease;
   }
   .session-dot.done    { background: var(--amber); border-color: var(--amber); }
   .session-dot.current { border-color: var(--amber); box-shadow: 0 0 8px var(--amber); }
-
   .pomo-body {
     display: flex; align-items: center;
     gap: 40px; flex-wrap: wrap;
   }
-
-  /* Ring */
   .pomo-ring-wrap { position: relative; flex-shrink: 0; }
-  .pomo-ring-wrap svg { transform: rotate(-90deg); }
+  .pomo-ring-wrap svg { transform: rotate(-90deg); display: block; }
   .ring-bg { fill: none; stroke: rgba(255,255,255,0.06); }
   .ring-progress {
     fill: none; stroke-linecap: round;
@@ -249,13 +194,10 @@
     font-size: 10px; letter-spacing: 0.3em;
     color: var(--muted); text-transform: uppercase;
   }
-
   .pomo-controls {
     flex: 1; min-width: 220px;
     display: flex; flex-direction: column; gap: 14px;
   }
-
-  /* Tabs */
   .pomo-tabs {
     display: flex; gap: 6px;
     background: rgba(255,255,255,0.04);
@@ -275,8 +217,6 @@
     box-shadow: 0 0 12px rgba(245,158,11,0.2);
   }
   .pomo-tab:hover:not(.active) { color: var(--text); }
-
-  /* Custom durations */
   .duration-row { display: flex; gap: 8px; }
   .duration-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
   .duration-label {
@@ -298,11 +238,8 @@
   .duration-input:focus { border-color: var(--amber); }
   .duration-unit {
     font-size: 8px; letter-spacing: 0.2em;
-    color: var(--muted); text-align: center;
-    text-transform: uppercase;
+    color: var(--muted); text-align: center; text-transform: uppercase;
   }
-
-  /* Buttons */
   .pomo-btn-row { display: flex; gap: 10px; }
   .btn {
     border: none; border-radius: 10px; cursor: pointer;
@@ -313,26 +250,24 @@
   .btn-primary {
     flex: 1; padding: 14px; font-size: 13px;
     background: var(--amber); color: #0a0a0f;
-    box-shadow: 0 0 24px rgba(245,158,11,0.25);
+    box-shadow: 0 0 24px rgba(245,158,11,0.3);
   }
   .btn-primary:hover {
     background: #fbbf24;
-    box-shadow: 0 0 32px rgba(245,158,11,0.4);
+    box-shadow: 0 0 36px rgba(245,158,11,0.45);
     transform: translateY(-1px);
   }
   .btn-primary.running {
-    background: var(--surface); color: var(--amber);
+    background: rgba(255,255,255,0.04); color: var(--amber);
     border: 1px solid var(--amber);
     box-shadow: 0 0 16px rgba(245,158,11,0.15);
   }
   .btn-secondary {
     padding: 14px 18px; font-size: 13px;
-    background: var(--surface); color: var(--muted);
+    background: rgba(255,255,255,0.04); color: var(--muted);
     border: 1px solid var(--border);
   }
   .btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
-
-  /* Stats */
   .pomo-stats { display: flex; gap: 8px; }
   .stat-pill {
     flex: 1; background: rgba(255,255,255,0.03);
@@ -347,21 +282,21 @@
     font-size: 9px; letter-spacing: 0.25em;
     color: var(--muted); text-transform: uppercase;
   }
-
-  /* Break mode */
   .pomo-card.break-mode .ring-progress { stroke: var(--cyan) !important; }
   .pomo-card.break-mode .pomo-tab.active {
     background: var(--cyan-dim); color: var(--cyan);
     box-shadow: 0 0 12px rgba(34,211,238,0.2);
   }
-  .pomo-card.break-mode .btn-primary { background: var(--cyan); box-shadow: 0 0 24px rgba(34,211,238,0.25); }
+  .pomo-card.break-mode .btn-primary {
+    background: var(--cyan); color: #0a0a0f;
+    box-shadow: 0 0 24px rgba(34,211,238,0.3);
+  }
   .pomo-card.break-mode .btn-primary:hover { background: #67e8f9; }
   .pomo-card.break-mode .btn-primary.running {
-    background: var(--surface); color: var(--cyan); border-color: var(--cyan);
+    background: rgba(255,255,255,0.04);
+    color: var(--cyan); border-color: var(--cyan);
   }
   .pomo-card.break-mode .duration-input:focus { border-color: var(--cyan); }
-
-  /* Flash */
   .flash-overlay {
     position: fixed; inset: 0;
     background: rgba(245,158,11,0.07);
@@ -369,70 +304,61 @@
   }
   .flash-overlay.flash { animation: flash-anim 0.9s ease forwards; }
   @keyframes flash-anim { 0%,100%{opacity:0;} 25%,65%{opacity:1;} }
-
-  /* Footer */
   .footer {
     text-align: center; font-size: 10px;
     letter-spacing: 0.25em;
-    color: rgba(100,116,139,0.35);
+    color: rgba(100,116,139,0.3);
     text-transform: uppercase;
   }
-
-  @media (max-width: 600px) {
+  @media (max-width: 620px) {
     .pomo-body { flex-direction: column; align-items: center; }
     .pomo-controls { width: 100%; }
     .world-clock { justify-content: flex-start; }
     .header { flex-direction: column; }
+    body { padding: 20px 16px; gap: 16px; }
   }
 </style>
 </head>
 <body>
 
-<canvas id="particleCanvas"></canvas>
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
-<div class="orb orb-3"></div>
+<canvas id="bgCanvas"></canvas>
 <div class="flash-overlay" id="flashOverlay"></div>
 
 <div class="dashboard">
-
-  <!-- HEADER: logo + world clock -->
   <div class="header">
     <div class="header-left">
       <div class="logo">CTRL<span>//</span>HUB</div>
       <div class="date-display" id="dateDisplay">—</div>
     </div>
-
     <div class="world-clock">
       <div class="tz-card home">
         <div class="tz-city">London</div>
-        <div class="tz-time"  id="tz-london">--:--</div>
+        <div class="tz-time"   id="tz-london">--:--</div>
         <div class="tz-offset" id="od-london"></div>
       </div>
       <div class="tz-card">
         <div class="tz-city">New York</div>
-        <div class="tz-time"  id="tz-newyork">--:--</div>
+        <div class="tz-time"   id="tz-newyork">--:--</div>
         <div class="tz-offset" id="od-newyork"></div>
       </div>
       <div class="tz-card">
         <div class="tz-city">Dubai</div>
-        <div class="tz-time"  id="tz-dubai">--:--</div>
+        <div class="tz-time"   id="tz-dubai">--:--</div>
         <div class="tz-offset" id="od-dubai"></div>
       </div>
       <div class="tz-card">
         <div class="tz-city">Tokyo</div>
-        <div class="tz-time"  id="tz-tokyo">--:--</div>
+        <div class="tz-time"   id="tz-tokyo">--:--</div>
         <div class="tz-offset" id="od-tokyo"></div>
       </div>
       <div class="tz-card">
         <div class="tz-city">Sydney</div>
-        <div class="tz-time"  id="tz-sydney">--:--</div>
+        <div class="tz-time"   id="tz-sydney">--:--</div>
         <div class="tz-offset" id="od-sydney"></div>
       </div>
     </div>
   </div>
 
-  <!-- MAIN CLOCK -->
   <div class="card clock-card">
     <div class="clock-label">System Time</div>
     <div class="clock-time">
@@ -441,13 +367,11 @@
     <div class="clock-seconds" id="clockSS">00</div>
   </div>
 
-  <!-- POMODORO -->
   <div class="card pomo-card" id="pomoCard">
     <div class="pomo-header">
       <div class="pomo-title">Pomodoro Timer</div>
       <div class="pomo-sessions" id="sessionDots"></div>
     </div>
-
     <div class="pomo-body">
       <div class="pomo-ring-wrap">
         <svg width="180" height="180" viewBox="0 0 180 180">
@@ -461,14 +385,12 @@
           <div class="pomo-mode-label" id="pomoModeLabel">Focus</div>
         </div>
       </div>
-
       <div class="pomo-controls">
         <div class="pomo-tabs">
           <button class="pomo-tab active" data-mode="focus" onclick="setMode('focus')">Focus</button>
           <button class="pomo-tab" data-mode="short" onclick="setMode('short')">Short</button>
           <button class="pomo-tab" data-mode="long"  onclick="setMode('long')">Long</button>
         </div>
-
         <div class="duration-row">
           <div class="duration-group">
             <div class="duration-label">Focus</div>
@@ -489,12 +411,10 @@
             <div class="duration-unit">min</div>
           </div>
         </div>
-
         <div class="pomo-btn-row">
           <button class="btn btn-primary" id="startBtn" onclick="toggleTimer()">Start</button>
           <button class="btn btn-secondary" onclick="resetTimer()">Reset</button>
         </div>
-
         <div class="pomo-stats">
           <div class="stat-pill">
             <div class="stat-val" id="statSessions">0</div>
@@ -513,343 +433,281 @@
     </div>
   </div>
 
-  <div class="footer">v2.0 &nbsp;·&nbsp; world clock &nbsp;·&nbsp; custom sessions &nbsp;·&nbsp; particle field</div>
+  <div class="footer">v3.0 &nbsp;·&nbsp; universal build</div>
 </div>
 
 <script>
-// ═══════════════════════════════════
-//  PARTICLE BACKGROUND
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════
+//  BACKGROUND — all via canvas (no CSS blur)
+//  Works on Firefox, Chrome, Pi, mobile
+// ═══════════════════════════════════════════════
 (function () {
-  const canvas = document.getElementById('particleCanvas');
+  const canvas = document.getElementById('bgCanvas');
   const ctx    = canvas.getContext('2d');
-  let W, H;
+  let W = 0, H = 0;
 
-  const COUNT = 85;
-  const CONN_DIST  = 130;
-  const CONN_PROB  = 0.0035;
-  const MAX_CONNS  = 7;
+  // Orbs — rendered as radial canvas gradients
+  const ORBS = [
+    { xPct: -0.10, yPct: -0.20, size: 0.85, r: 245, g: 158, b: 11,  alpha: 0.22, spd: 0.0009, ph: 0.0   },
+    { xPct:  0.90, yPct:  0.80, size: 0.72, r:  34, g: 211, b: 238, alpha: 0.18, spd: 0.0012, ph: 2.094 },
+    { xPct:  0.55, yPct:  0.48, size: 0.50, r: 245, g: 158, b: 11,  alpha: 0.13, spd: 0.0007, ph: 4.189 },
+  ];
 
-  let particles  = [];
-  let connFlares = []; // {a,b,life,max}
+  // Particles
+  const N = 55;
+  let pts = [], conns = [];
+  const MAX_C = 6, C_DIST = 115, C_PROB = 0.003;
+
+  function mkPt(bottom) {
+    const t = Math.random();
+    const type = t < 0.08 ? 1 : t < 0.14 ? 2 : 0; // 0=white 1=amber 2=cyan
+    return {
+      x: Math.random() * W,
+      y: bottom ? H + Math.random() * 60 : Math.random() * H,
+      r: Math.random() * 1.3 + 0.4,
+      vx: (Math.random() - 0.5) * 0.13,
+      vy: -(Math.random() * 0.18 + 0.05),
+      a: Math.random() * 0.32 + 0.06,
+      type, ph: Math.random() * 6.28, ps: 0.007 + Math.random() * 0.011,
+    };
+  }
+  function rgb(type) {
+    return type === 1 ? [245,158,11] : type === 2 ? [34,211,238] : [200,215,235];
+  }
+  function init() {
+    pts   = Array.from({length: N}, () => mkPt(false));
+    conns = [];
+  }
 
   function resize() {
     W = canvas.width  = window.innerWidth;
     H = canvas.height = window.innerHeight;
   }
 
-  function mkParticle(startLow) {
-    const r = Math.random();
-    const type = r < 0.08 ? 'amber' : r < 0.14 ? 'cyan' : 'white';
-    return {
-      x:     Math.random() * W,
-      y:     startLow ? H + Math.random() * H * 0.3 : Math.random() * H,
-      r:     Math.random() * 1.5 + 0.4,
-      vx:    (Math.random() - 0.5) * 0.15,
-      vy:    -(Math.random() * 0.22 + 0.05),
-      alpha: Math.random() * 0.38 + 0.05,
-      type,
-      phase:      Math.random() * Math.PI * 2,
-      phaseSpeed: 0.007 + Math.random() * 0.013,
-    };
-  }
-
-  function colorRgb(type) {
-    if (type === 'amber') return '245,158,11';
-    if (type === 'cyan')  return '34,211,238';
-    return '200,215,235';
-  }
-
-  function init() {
-    particles  = Array.from({ length: COUNT }, () => mkParticle(false));
-    connFlares = [];
-  }
-
-  function trySpawnConn() {
-    if (connFlares.length >= MAX_CONNS) return;
-    const ai = Math.floor(Math.random() * COUNT);
-    const bi = Math.floor(Math.random() * COUNT);
-    if (ai === bi) return;
-    const pa = particles[ai], pb = particles[bi];
-    const dx = pa.x - pb.x, dy = pa.y - pb.y;
-    if (dx*dx + dy*dy < CONN_DIST*CONN_DIST && Math.random() < CONN_PROB) {
-      connFlares.push({ a: ai, b: bi, life: 0, max: 80 + Math.random() * 70 });
-    }
-  }
-
-  function frame() {
+  // 30fps throttle
+  let last = 0;
+  function frame(ts) {
+    requestAnimationFrame(frame);
+    if (ts - last < 33) return;
+    last = ts;
     ctx.clearRect(0, 0, W, H);
 
-    // Draw connection flares
-    connFlares = connFlares.filter(c => c.life < c.max);
-    connFlares.forEach(c => {
+    // ── Orbs ──
+    ORBS.forEach(o => {
+      o.ph += o.spd;
+      const pulse = 0.82 + 0.18 * Math.sin(o.ph);
+      const cx = o.xPct * W, cy = o.yPct * H;
+      const rad = o.size * Math.min(W, H) * 0.5;
+      const sx = (o.size * W * 0.5) / rad;
+      const sy = (o.size * H * 0.5) / rad;
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(sx, sy);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rad);
+      g.addColorStop(0,    `rgba(${o.r},${o.g},${o.b},${(o.alpha * pulse).toFixed(3)})`);
+      g.addColorStop(0.45, `rgba(${o.r},${o.g},${o.b},${(o.alpha * pulse * 0.35).toFixed(3)})`);
+      g.addColorStop(1,    `rgba(${o.r},${o.g},${o.b},0)`);
+      ctx.beginPath();
+      ctx.arc(0, 0, rad, 0, 6.2832);
+      ctx.fillStyle = g;
+      ctx.fill();
+      ctx.restore();
+    });
+
+    // ── Connection flares ──
+    conns = conns.filter(c => c.life < c.max);
+    conns.forEach(c => {
       c.life++;
-      const t = c.life / c.max;
-      const a = Math.sin(t * Math.PI) * 0.16;
-      const pa = particles[c.a], pb = particles[c.b];
+      const alpha = Math.sin((c.life / c.max) * Math.PI) * 0.14;
+      const pa = pts[c.a], pb = pts[c.b];
+      if (!pa || !pb) return;
       ctx.beginPath();
       ctx.moveTo(pa.x, pa.y);
       ctx.lineTo(pb.x, pb.y);
-      ctx.strokeStyle = `rgba(245,158,11,${a})`;
-      ctx.lineWidth   = 0.7;
+      ctx.strokeStyle = `rgba(245,158,11,${alpha.toFixed(3)})`;
+      ctx.lineWidth = 0.6;
       ctx.stroke();
     });
 
-    // Update & draw particles
-    particles.forEach((p, i) => {
-      p.phase += p.phaseSpeed;
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // Wrap horizontally
-      if (p.x < -20)    p.x = W + 10;
+    // ── Particles ──
+    pts.forEach((p, i) => {
+      p.ph += p.ps;
+      p.x  += p.vx;
+      p.y  += p.vy;
+      if (p.x < -20) p.x = W + 10;
       if (p.x > W + 20) p.x = -10;
+      if (p.y < -12) { pts[i] = mkPt(true); return; }
 
-      // Reset when off top
-      if (p.y < -12) {
-        particles[i] = mkParticle(true);
-        return;
-      }
+      let a = p.a;
+      if (p.y < H * 0.1) a *= p.y / (H * 0.1);
+      if (p.type !== 0)   a *= 0.5 + 0.5 * Math.sin(p.ph);
 
-      // Fade near top
-      let alpha = p.alpha;
-      if (p.y < H * 0.12) alpha *= p.y / (H * 0.12);
-
-      // Pulse for accent dots
-      const pulse = p.type !== 'white' ? 0.5 + 0.5 * Math.sin(p.phase) : 1;
-      alpha *= pulse;
-
-      const rgb = colorRgb(p.type);
+      const [r, g, b] = rgb(p.type);
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${rgb},${alpha})`;
+      ctx.arc(p.x, p.y, p.r, 0, 6.2832);
+      ctx.fillStyle = `rgba(${r},${g},${b},${a.toFixed(3)})`;
       ctx.fill();
 
-      // Soft glow for amber/cyan
-      if (p.type !== 'white' && alpha > 0.12) {
+      if (p.type !== 0 && a > 0.09) {
+        const gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
+        gr.addColorStop(0, `rgba(${r},${g},${b},${(a * 0.22).toFixed(3)})`);
+        gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${rgb},${alpha * 0.07})`;
+        ctx.arc(p.x, p.y, p.r * 5, 0, 6.2832);
+        ctx.fillStyle = gr;
         ctx.fill();
       }
 
-      trySpawnConn();
+      if (conns.length < MAX_C && Math.random() < C_PROB) {
+        const j = Math.floor(Math.random() * N);
+        if (j !== i) {
+          const dx = p.x - pts[j].x, dy = p.y - pts[j].y;
+          if (dx*dx + dy*dy < C_DIST*C_DIST) {
+            conns.push({a: i, b: j, life: 0, max: 80 + Math.random() * 55});
+          }
+        }
+      }
     });
-
-    requestAnimationFrame(frame);
   }
 
   resize();
   init();
   requestAnimationFrame(frame);
-  window.addEventListener('resize', resize);
+  window.addEventListener('resize', () => { resize(); init(); });
 })();
 
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════
 //  CLOCK + WORLD CLOCK
-// ═══════════════════════════════════
-const DAY_NAMES   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-const TZ_LIST = [
-  { id: 'london',  iana: 'Europe/London'    },
-  { id: 'newyork', iana: 'America/New_York'  },
-  { id: 'dubai',   iana: 'Asia/Dubai'        },
-  { id: 'tokyo',   iana: 'Asia/Tokyo'        },
-  { id: 'sydney',  iana: 'Australia/Sydney'  },
+// ═══════════════════════════════════════════════
+const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const ZONES  = [
+  {id:'london',  iana:'Europe/London'},
+  {id:'newyork', iana:'America/New_York'},
+  {id:'dubai',   iana:'Asia/Dubai'},
+  {id:'tokyo',   iana:'Asia/Tokyo'},
+  {id:'sydney',  iana:'Australia/Sydney'},
 ];
+function pad(n){ return String(n).padStart(2,'0'); }
 
-function pad(n) { return String(n).padStart(2, '0'); }
-
-function updateClock() {
+function updateClock(){
   const now = new Date();
   document.getElementById('clockHH').textContent = pad(now.getHours());
   document.getElementById('clockMM').textContent = pad(now.getMinutes());
   document.getElementById('clockSS').textContent = pad(now.getSeconds());
   document.getElementById('dateDisplay').textContent =
-    `${DAY_NAMES[now.getDay()]}  ·  ${MONTH_NAMES[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+    `${DAYS[now.getDay()]}  ·  ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 
-  const londonDate = now.toLocaleDateString('en-GB', { timeZone: 'Europe/London' });
-
-  TZ_LIST.forEach(zone => {
-    const timeStr = now.toLocaleTimeString('en-GB', {
-      timeZone: zone.iana, hour: '2-digit', minute: '2-digit', hour12: false
-    });
-    document.getElementById(`tz-${zone.id}`).textContent = timeStr;
-
-    const zoneDate = now.toLocaleDateString('en-GB', { timeZone: zone.iana });
-    const odEl     = document.getElementById(`od-${zone.id}`);
-
-    if (zone.id === 'london' || zoneDate === londonDate) {
-      odEl.textContent = '';
-    } else {
-      const parse = s => { const [d,m,y] = s.split('/').map(Number); return new Date(y,m-1,d); };
-      const diff  = Math.round((parse(zoneDate) - parse(londonDate)) / 86400000);
-      odEl.textContent = diff > 0 ? `+${diff}d` : `${diff}d`;
-    }
+  const londonDate = now.toLocaleDateString('en-GB', {timeZone:'Europe/London'});
+  ZONES.forEach(z => {
+    document.getElementById(`tz-${z.id}`).textContent =
+      now.toLocaleTimeString('en-GB', {timeZone:z.iana, hour:'2-digit', minute:'2-digit', hour12:false});
+    const zd  = now.toLocaleDateString('en-GB', {timeZone:z.iana});
+    const odEl = document.getElementById(`od-${z.id}`);
+    if (z.id === 'london' || zd === londonDate) { odEl.textContent = ''; return; }
+    const parse = s => { const [d,m,y] = s.split('/').map(Number); return new Date(y,m-1,d); };
+    const diff  = Math.round((parse(zd)-parse(londonDate))/86400000);
+    odEl.textContent = diff > 0 ? `+${diff}d` : `${diff}d`;
   });
 }
-
 updateClock();
 setInterval(updateClock, 1000);
 
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════
 //  POMODORO
-// ═══════════════════════════════════
-const DEFAULTS = { focus: 25, short: 5, long: 15 };
-const LABELS   = { focus: 'Focus', short: 'Short Break', long: 'Long Break' };
-const IS_BREAK = { focus: false, short: true, long: true };
+// ═══════════════════════════════════════════════
+const DEF    = {focus:25, short:5, long:15};
+const LABELS = {focus:'Focus', short:'Short Break', long:'Long Break'};
+const BRK    = {focus:false, short:true, long:true};
+let mode = 'focus', total = 1500, rem = 1500, running = false, tid = null;
+let sessions = 0, focMin = 0, streak = 0;
+const CIRC = 2 * Math.PI * 78;
+const ringEl = document.getElementById('ringProgress');
+const cdEl   = document.getElementById('pomoCountdown');
+const mlEl   = document.getElementById('pomoModeLabel');
+const sBtn   = document.getElementById('startBtn');
+const pCard  = document.getElementById('pomoCard');
 
-let currentMode       = 'focus';
-let totalSecs         = 25 * 60;
-let remaining         = totalSecs;
-let running           = false;
-let timerID           = null;
-let completedSessions = 0;
-let focusedMinutes    = 0;
-let streak            = 0;
-
-const CIRCUM = 2 * Math.PI * 78;
-
-const ringEl      = document.getElementById('ringProgress');
-const countdownEl = document.getElementById('pomoCountdown');
-const modeLabelEl = document.getElementById('pomoModeLabel');
-const startBtn    = document.getElementById('startBtn');
-const pomoCard    = document.getElementById('pomoCard');
-
-function getMins(mode) {
-  const map = { focus: 'inputFocus', short: 'inputShort', long: 'inputLong' };
-  const v   = parseInt(document.getElementById(map[mode]).value, 10);
-  return (!isNaN(v) && v >= 1) ? Math.min(v, 99) : DEFAULTS[mode];
+function getMins(m){
+  const ids={focus:'inputFocus',short:'inputShort',long:'inputLong'};
+  const v=parseInt(document.getElementById(ids[m]).value,10);
+  return(!isNaN(v)&&v>=1)?Math.min(v,99):DEF[m];
 }
-
-function setMode(mode) {
-  if (running) return;
-  currentMode      = mode;
-  totalSecs        = getMins(mode) * 60;
-  remaining        = totalSecs;
-  modeLabelEl.textContent = LABELS[mode];
-  document.querySelectorAll('.pomo-tab').forEach(t =>
-    t.classList.toggle('active', t.dataset.mode === mode));
-
-  if (IS_BREAK[mode]) {
-    pomoCard.classList.add('break-mode');
-    ringEl.style.stroke = '#22d3ee';
-  } else {
-    pomoCard.classList.remove('break-mode');
-    ringEl.style.stroke = '#f59e0b';
-  }
-  updateDisplay();
-  updateRing();
+function setMode(m){
+  if(running)return;
+  mode=m; total=getMins(m)*60; rem=total;
+  mlEl.textContent=LABELS[m];
+  document.querySelectorAll('.pomo-tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===m));
+  if(BRK[m]){pCard.classList.add('break-mode');ringEl.style.stroke='#22d3ee';}
+  else{pCard.classList.remove('break-mode');ringEl.style.stroke='#f59e0b';}
+  upDisp(); upRing();
 }
-
-function onDurationChange(mode) {
-  if (mode === currentMode && !running) {
-    totalSecs = getMins(mode) * 60;
-    remaining = totalSecs;
-    updateDisplay();
-    updateRing();
-  }
+function onDurationChange(m){
+  if(m===mode&&!running){total=getMins(m)*60;rem=total;upDisp();upRing();}
 }
-
-function updateDisplay() {
-  countdownEl.textContent = `${pad(Math.floor(remaining/60))}:${pad(remaining%60)}`;
+function upDisp(){ cdEl.textContent=`${pad(Math.floor(rem/60))}:${pad(rem%60)}`; }
+function upRing(){ ringEl.style.strokeDasharray=CIRC; ringEl.style.strokeDashoffset=CIRC*(1-rem/total); }
+function toggleTimer(){
+  if(running){clearInterval(tid);running=false;sBtn.textContent='Resume';sBtn.classList.remove('running');}
+  else{running=true;sBtn.textContent='Pause';sBtn.classList.add('running');tid=setInterval(tick,1000);}
 }
-
-function updateRing() {
-  ringEl.style.strokeDasharray  = CIRCUM;
-  ringEl.style.strokeDashoffset = CIRCUM * (1 - remaining / totalSecs);
+function tick(){
+  if(rem<=0){clearInterval(tid);running=false;onComplete();return;}
+  rem--; upDisp(); upRing();
 }
-
-function toggleTimer() {
-  if (running) {
-    clearInterval(timerID);
-    running = false;
-    startBtn.textContent = 'Resume';
-    startBtn.classList.remove('running');
-  } else {
-    running = true;
-    startBtn.textContent = 'Pause';
-    startBtn.classList.add('running');
-    timerID = setInterval(tick, 1000);
-  }
-}
-
-function tick() {
-  if (remaining <= 0) { clearInterval(timerID); running = false; onComplete(); return; }
-  remaining--;
-  updateDisplay();
-  updateRing();
-}
-
-function onComplete() {
+function onComplete(){
   playBeep(); flash();
-  startBtn.textContent = 'Start';
-  startBtn.classList.remove('running');
-
-  if (currentMode === 'focus') {
-    completedSessions++;
-    focusedMinutes += getMins('focus');
-    streak++;
-    document.getElementById('statSessions').textContent = completedSessions;
-    document.getElementById('statFocused').textContent  = focusedMinutes + 'm';
-    document.getElementById('statStreak').textContent   = streak;
+  sBtn.textContent='Start'; sBtn.classList.remove('running');
+  if(mode==='focus'){
+    sessions++; focMin+=getMins('focus'); streak++;
+    document.getElementById('statSessions').textContent=sessions;
+    document.getElementById('statFocused').textContent=focMin+'m';
+    document.getElementById('statStreak').textContent=streak;
     renderDots();
-    setMode(completedSessions % 4 === 0 ? 'long' : 'short');
-  } else {
-    setMode('focus');
-  }
+    setMode(sessions%4===0?'long':'short');
+  } else { setMode('focus'); }
 }
-
-function resetTimer() {
-  clearInterval(timerID); running = false;
-  totalSecs = getMins(currentMode) * 60;
-  remaining = totalSecs;
-  updateDisplay(); updateRing();
-  startBtn.textContent = 'Start';
-  startBtn.classList.remove('running');
+function resetTimer(){
+  clearInterval(tid);running=false;
+  total=getMins(mode)*60;rem=total;
+  upDisp();upRing();
+  sBtn.textContent='Start';sBtn.classList.remove('running');
 }
-
-function renderDots() {
-  const c = document.getElementById('sessionDots');
-  c.innerHTML = '';
-  const n = Math.min(completedSessions + 1, 8);
-  for (let i = 0; i < n; i++) {
-    const d = document.createElement('div');
-    d.className = 'session-dot' + (i < completedSessions ? ' done' : ' current');
+function renderDots(){
+  const c=document.getElementById('sessionDots');
+  c.innerHTML='';
+  const n=Math.min(sessions+1,8);
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');
+    d.className='session-dot'+(i<sessions?' done':' current');
     c.appendChild(d);
   }
 }
 
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════
 //  AUDIO + FLASH
-// ═══════════════════════════════════
-function playBeep() {
-  try {
-    const ac = new (window.AudioContext || window.webkitAudioContext)();
-    [[523.25, 0], [659.25, 0.18], [783.99, 0.36]].forEach(([freq, delay]) => {
-      const o = ac.createOscillator(), g = ac.createGain();
-      o.connect(g); g.connect(ac.destination);
-      o.type = 'sine'; o.frequency.value = freq;
-      const t = ac.currentTime + delay;
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(0.25, t + 0.04);
-      g.gain.linearRampToValueAtTime(0, t + 0.22);
-      o.start(t); o.stop(t + 0.25);
+// ═══════════════════════════════════════════════
+function playBeep(){
+  try{
+    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    [[523.25,0],[659.25,0.18],[783.99,0.36]].forEach(([f,d])=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.connect(g);g.connect(ac.destination);
+      o.type='sine';o.frequency.value=f;
+      const t=ac.currentTime+d;
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(0.25,t+0.04);
+      g.gain.linearRampToValueAtTime(0,t+0.22);
+      o.start(t);o.stop(t+0.25);
     });
-  } catch(e) {}
+  }catch(e){}
+}
+function flash(){
+  const el=document.getElementById('flashOverlay');
+  el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');
 }
 
-function flash() {
-  const el = document.getElementById('flashOverlay');
-  el.classList.remove('flash');
-  void el.offsetWidth;
-  el.classList.add('flash');
-}
-
-// Init
-renderDots();
-updateRing();
+renderDots(); upDisp(); upRing();
 </script>
 </body>
 </html>
