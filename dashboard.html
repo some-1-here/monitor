@@ -622,7 +622,7 @@
     grid-template-columns: repeat(18, 1fr);
     grid-template-rows: repeat(9, 28px);
     gap: 2px;
-    max-width: 1100px;
+    max-width: calc(100vw - 280px - 230px);
     margin: 0 auto;
     height: 268px;
   }
@@ -848,6 +848,217 @@
     text-transform: uppercase;
     text-shadow: 0 0 8px rgba(74,222,128,0.5);
   }
+  /* ── REFERENCE TABS ── */
+  .ref-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .ref-tab {
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ref-tab:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .ref-tab.active-pt    { background: rgba(245,158,11,0.15); color: var(--amber); border-color: rgba(245,158,11,0.3); }
+  .ref-tab.active-aa    { background: rgba(34,211,238,0.12); color: var(--cyan);  border-color: rgba(34,211,238,0.3); }
+  .ref-tab.active-bio   { background: rgba(74,222,128,0.12); color: #4ade80;      border-color: rgba(74,222,128,0.3); }
+  .ref-tab.active-stats { background: rgba(168,85,247,0.12); color: #c084fc;      border-color: rgba(168,85,247,0.3); }
+
+  /* Tab content panels */
+  .ref-panel { display: none; }
+  .ref-panel.active { display: block; }
+
+  /* ── AMINO ACIDS ── */
+  .aa-grid {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    gap: 3px;
+    max-width: calc(100vw - 280px - 230px);
+    margin: 0 auto;
+    height: 80px;
+  }
+  .aa-card {
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    gap: 1px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .aa-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 40%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .aa-card:hover { transform: scale(1.3); z-index: 20; }
+  .aa-3   { font-family: 'Orbitron', monospace; font-size: clamp(6px,0.65vw,9px); font-weight: 700; color: #fff; line-height: 1; }
+  .aa-1   { font-family: 'Orbitron', monospace; font-size: clamp(5px,0.5vw,7px);  color: rgba(255,255,255,0.5); line-height: 1; }
+  /* AA type colours */
+  .aa-nonpolar  { background: rgba(245,158,11,0.22); border-color: rgba(245,158,11,0.35); }
+  .aa-nonpolar:hover  { box-shadow: 0 0 12px rgba(245,158,11,0.5); }
+  .aa-polar     { background: rgba(34,211,238,0.18); border-color: rgba(34,211,238,0.3); }
+  .aa-polar:hover     { box-shadow: 0 0 12px rgba(34,211,238,0.5); }
+  .aa-charged-pos { background: rgba(239,68,68,0.22); border-color: rgba(239,68,68,0.35); }
+  .aa-charged-pos:hover { box-shadow: 0 0 12px rgba(239,68,68,0.5); }
+  .aa-charged-neg { background: rgba(99,102,241,0.22); border-color: rgba(99,102,241,0.35); }
+  .aa-charged-neg:hover { box-shadow: 0 0 12px rgba(99,102,241,0.5); }
+  .aa-special   { background: rgba(168,85,247,0.2); border-color: rgba(168,85,247,0.32); }
+  .aa-special:hover   { box-shadow: 0 0 12px rgba(168,85,247,0.5); }
+  /* AA legend */
+  .aa-legend {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 5px; justify-content: center;
+  }
+
+  /* ── BIO MOLECULES ── */
+  .bio-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    height: 210px;
+    overflow-y: auto;
+    max-width: calc(100vw - 280px - 230px);
+    margin: 0 auto;
+  }
+  .bio-grid::-webkit-scrollbar { width: 3px; }
+  .bio-grid::-webkit-scrollbar-thumb { background: rgba(74,222,128,0.2); border-radius: 2px; }
+  .bio-card {
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .bio-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 35%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .bio-card:hover { transform: scale(1.03); z-index: 20; }
+  .bio-name { font-size: 10px; font-weight: 700; color: var(--text); margin-bottom: 3px; line-height: 1.2; }
+  .bio-category { font-size: 8px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .bio-detail { font-size: 9px; color: rgba(255,255,255,0.55); line-height: 1.3; }
+  .bio-carb   { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.28); }
+  .bio-carb:hover   { box-shadow: 0 0 10px rgba(245,158,11,0.4); }
+  .bio-lipid  { background: rgba(249,115,22,0.15); border-color: rgba(249,115,22,0.28); }
+  .bio-lipid:hover  { box-shadow: 0 0 10px rgba(249,115,22,0.4); }
+  .bio-protein{ background: rgba(34,211,238,0.12); border-color: rgba(34,211,238,0.25); }
+  .bio-protein:hover{ box-shadow: 0 0 10px rgba(34,211,238,0.4); }
+  .bio-nucleic{ background: rgba(168,85,247,0.15); border-color: rgba(168,85,247,0.28); }
+  .bio-nucleic:hover{ box-shadow: 0 0 10px rgba(168,85,247,0.4); }
+  .bio-other  { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.25); }
+  .bio-other:hover  { box-shadow: 0 0 10px rgba(74,222,128,0.4); }
+
+  /* ── STATS FORMULAS ── */
+  .stats-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    height: 210px;
+    align-items: stretch;
+    max-width: calc(100vw - 280px - 230px);
+    margin: 0 auto;
+  }
+  .stats-scroll::-webkit-scrollbar { height: 3px; }
+  .stats-scroll::-webkit-scrollbar-thumb { background: rgba(168,85,247,0.25); border-radius: 2px; }
+  .stats-card {
+    flex-shrink: 0;
+    width: 200px;
+    border-radius: 10px;
+    border: 1px solid rgba(168,85,247,0.2);
+    background: rgba(168,85,247,0.07);
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168,85,247,0.4), transparent);
+  }
+  .stats-card-title {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.2em; color: #c084fc;
+    text-transform: uppercase;
+  }
+  .stats-notation {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px; font-weight: 700;
+    color: var(--text);
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 6px 8px;
+    letter-spacing: 0.05em;
+  }
+  .stats-formula {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+  .stats-note {
+    font-size: 9px;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-top: auto;
+  }
+
+  /* Amino acid popup */
+  .aa-popup-card {
+    background: #0d0d1a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px 28px;
+    min-width: 280px;
+    position: relative;
+  }
+  .aa-popup-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    border-radius: 16px 16px 0 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  }
+  .aa-popup-sym {
+    font-family: 'Orbitron', monospace;
+    font-size: 40px; font-weight: 900;
+    line-height: 1; margin-bottom: 4px;
+  }
+  .aa-popup-name { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .aa-popup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .aa-popup-field {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 7px; padding: 7px 9px;
+  }
+  .aa-popup-field-label { font-size: 8px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
+  .aa-popup-field-val { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; color: var(--text); }
+
   @media (max-width: 620px) {
     .pomo-body { flex-direction: column; align-items: center; }
     .pomo-controls { width: 100%; }
@@ -865,10 +1076,37 @@
 <canvas id="bgCanvas"></canvas>
 <div class="flash-overlay" id="flashOverlay"></div>
 
-<!-- PERIODIC TABLE -->
+<!-- REFERENCE PANEL -->
 <div class="ptable-wrap" id="ptableWrap">
-  <div class="ptable-inner" id="ptableInner"></div>
-  <div class="ptable-legend" id="ptableLegend"></div>
+  <!-- Tab buttons -->
+  <div class="ref-tabs">
+    <button class="ref-tab active-pt"    onclick="switchTab('pt')"   id="tab-pt">Periodic Table</button>
+    <button class="ref-tab"              onclick="switchTab('aa')"   id="tab-aa">Amino Acids</button>
+    <button class="ref-tab"              onclick="switchTab('bio')"  id="tab-bio">Bio Molecules</button>
+    <button class="ref-tab"              onclick="switchTab('stats')"id="tab-stats">Statistics</button>
+  </div>
+
+  <!-- Periodic Table -->
+  <div class="ref-panel active" id="panel-pt">
+    <div class="ptable-inner" id="ptableInner"></div>
+    <div class="ptable-legend" id="ptableLegend"></div>
+  </div>
+
+  <!-- Amino Acids -->
+  <div class="ref-panel" id="panel-aa">
+    <div class="aa-grid" id="aaGrid"></div>
+    <div class="aa-legend" id="aaLegend"></div>
+  </div>
+
+  <!-- Bio Molecules -->
+  <div class="ref-panel" id="panel-bio">
+    <div class="bio-grid" id="bioGrid"></div>
+  </div>
+
+  <!-- Statistics -->
+  <div class="ref-panel" id="panel-stats">
+    <div class="stats-scroll" id="statsScroll"></div>
+  </div>
 </div>
 
 <!-- ELEMENT POPUP -->
@@ -907,6 +1145,37 @@
           </div>
         </div>
         <div class="el-popup-radioactive" id="popRadio"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AMINO ACID POPUP -->
+<div class="el-popup" id="aaPopup" onclick="closeAaPopup(event)">
+  <div class="aa-popup-card">
+    <button class="el-popup-close" onclick="document.getElementById('aaPopup').classList.remove('open')">&times;</button>
+    <div class="aa-popup-sym" id="aaPopSym"></div>
+    <div class="aa-popup-name" id="aaPopName"></div>
+    <div class="aa-popup-grid">
+      <div class="aa-popup-field">
+        <div class="aa-popup-field-label">3-Letter Code</div>
+        <div class="aa-popup-field-val" id="aaPop3"></div>
+      </div>
+      <div class="aa-popup-field">
+        <div class="aa-popup-field-label">1-Letter Code</div>
+        <div class="aa-popup-field-val" id="aaPop1"></div>
+      </div>
+      <div class="aa-popup-field">
+        <div class="aa-popup-field-label">Type</div>
+        <div class="aa-popup-field-val" id="aaPopType"></div>
+      </div>
+      <div class="aa-popup-field">
+        <div class="aa-popup-field-label">MW (Da)</div>
+        <div class="aa-popup-field-val" id="aaPopMW"></div>
+      </div>
+      <div class="aa-popup-field" style="grid-column:1/-1">
+        <div class="aa-popup-field-label">Key Properties</div>
+        <div class="aa-popup-field-val" id="aaPopProps" style="font-size:10px;font-family:'Syne',sans-serif;font-weight:400;color:rgba(255,255,255,0.7)"></div>
       </div>
     </div>
   </div>
@@ -1195,6 +1464,245 @@
   window.addEventListener('resize', () => { resize(); init(); });
 })();
 
+
+
+// ═══════════════════════════════════════════════
+//  TAB SWITCHING
+// ═══════════════════════════════════════════════
+const TAB_ACTIVE = {
+  pt: 'active-pt', aa: 'active-aa', bio: 'active-bio', stats: 'active-stats'
+};
+function switchTab(id) {
+  document.querySelectorAll('.ref-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ref-tab').forEach(t => t.className = 'ref-tab');
+  document.getElementById(`panel-${id}`).classList.add('active');
+  document.getElementById(`tab-${id}`).classList.add('ref-tab', TAB_ACTIVE[id]);
+}
+
+// ═══════════════════════════════════════════════
+//  AMINO ACIDS
+// ═══════════════════════════════════════════════
+// [3-letter, 1-letter, name, type-class, type-label, MW, properties]
+const AMINO_ACIDS = [
+  ['Ala','A','Alanine',     'nonpolar',    'Nonpolar',      89,  'Small, hydrophobic, found in alpha helices'],
+  ['Val','V','Valine',      'nonpolar',    'Nonpolar',      117, 'Branched chain, hydrophobic core'],
+  ['Ile','I','Isoleucine',  'nonpolar',    'Nonpolar',      131, 'Branched chain, essential amino acid'],
+  ['Leu','L','Leucine',     'nonpolar',    'Nonpolar',      131, 'Branched chain, most abundant essential AA'],
+  ['Met','M','Methionine',  'nonpolar',    'Nonpolar',      149, 'Contains sulfur, always start codon (AUG)'],
+  ['Phe','F','Phenylalanine','nonpolar',   'Nonpolar',      165, 'Aromatic ring, essential, very hydrophobic'],
+  ['Trp','W','Tryptophan',  'nonpolar',    'Nonpolar',      204, 'Largest AA, aromatic indole ring, essential'],
+  ['Pro','P','Proline',     'special',     'Special',       115, 'Rigid cyclic structure, breaks alpha helices'],
+  ['Gly','G','Glycine',     'special',     'Special',       75,  'Smallest AA, achiral, very flexible'],
+  ['Cys','C','Cysteine',    'special',     'Special',       121, 'Contains thiol (-SH), forms disulfide bonds'],
+  ['Ser','S','Serine',      'polar',       'Polar',         105, 'Hydroxyl group, common phosphorylation site'],
+  ['Thr','T','Threonine',   'polar',       'Polar',         119, 'Hydroxyl group, essential amino acid'],
+  ['Asn','N','Asparagine',  'polar',       'Polar',         132, 'Amide group, N-linked glycosylation site'],
+  ['Gln','Q','Glutamine',   'polar',       'Polar',         146, 'Amide group, nitrogen transport in blood'],
+  ['Tyr','Y','Tyrosine',    'polar',       'Polar',         181, 'Aromatic, phenol group, phosphorylation site'],
+  ['Asp','D','Aspartate',   'charged-neg', 'Neg. Charged',  133, 'Carboxyl group, negative at pH 7, acidic'],
+  ['Glu','E','Glutamate',   'charged-neg', 'Neg. Charged',  147, 'Carboxyl group, neurotransmitter role'],
+  ['Lys','K','Lysine',      'charged-pos', 'Pos. Charged',  146, 'Amino group, positive at pH 7, essential'],
+  ['Arg','R','Arginine',    'charged-pos', 'Pos. Charged',  174, 'Guanidinium group, strongly basic, essential'],
+  ['His','H','Histidine',   'charged-pos', 'Pos. Charged',  155, 'Imidazole ring, pKa ~6, enzyme active sites'],
+];
+
+const AA_TYPE_COLORS = {
+  'nonpolar':    { bg: 'rgba(245,158,11,0.22)',  border: 'rgba(245,158,11,0.35)', text: '#f59e0b' },
+  'polar':       { bg: 'rgba(34,211,238,0.18)',  border: 'rgba(34,211,238,0.3)',  text: '#22d3ee' },
+  'charged-pos': { bg: 'rgba(239,68,68,0.22)',   border: 'rgba(239,68,68,0.35)',  text: '#ef4444' },
+  'charged-neg': { bg: 'rgba(99,102,241,0.22)',  border: 'rgba(99,102,241,0.35)', text: '#6366f1' },
+  'special':     { bg: 'rgba(168,85,247,0.2)',   border: 'rgba(168,85,247,0.32)', text: '#a855f7' },
+};
+
+function buildAminoAcids() {
+  const grid = document.getElementById('aaGrid');
+  grid.innerHTML = AMINO_ACIDS.map(aa => {
+    const [code3, code1, name, type] = aa;
+    return `<div class="aa-card aa-${type}" onclick='showAA(${JSON.stringify(aa)})'>
+      <span class="aa-3">${code3}</span>
+      <span class="aa-1">${code1}</span>
+    </div>`;
+  }).join('');
+
+  const legend = document.getElementById('aaLegend');
+  const types = { nonpolar:'Nonpolar', polar:'Polar', 'charged-pos':'+ Charged', 'charged-neg':'- Charged', special:'Special' };
+  legend.innerHTML = Object.entries(types).map(([k,v]) => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${AA_TYPE_COLORS[k].text};opacity:0.7"></div>
+      ${v}
+    </div>`).join('');
+}
+
+function showAA(aa) {
+  const [code3, code1, name, type, typeLabel, mw, props] = aa;
+  const col = AA_TYPE_COLORS[type];
+  document.getElementById('aaPopSym').textContent  = code3;
+  document.getElementById('aaPopSym').style.color  = col.text;
+  document.getElementById('aaPopSym').style.textShadow = `0 0 20px ${col.text}88`;
+  document.getElementById('aaPopName').textContent = name;
+  document.getElementById('aaPop3').textContent    = code3;
+  document.getElementById('aaPop1').textContent    = code1;
+  document.getElementById('aaPopType').textContent = typeLabel;
+  document.getElementById('aaPopMW').textContent   = mw + ' Da';
+  document.getElementById('aaPopProps').textContent= props;
+  document.getElementById('aaPopup').classList.add('open');
+}
+
+function closeAaPopup(e) {
+  if (e.target === document.getElementById('aaPopup'))
+    document.getElementById('aaPopup').classList.remove('open');
+}
+
+buildAminoAcids();
+
+// ═══════════════════════════════════════════════
+//  BIO MOLECULES
+// ═══════════════════════════════════════════════
+// [name, category-class, category-label, detail]
+const BIO_MOLECULES = [
+  // Carbohydrates
+  ['Glucose',       'carb',    'Monosaccharide', 'C₆H₁₂O₆ — primary energy source, ring/chain form'],
+  ['Fructose',      'carb',    'Monosaccharide', 'C₆H₁₂O₆ — isomer of glucose, found in fruit'],
+  ['Galactose',     'carb',    'Monosaccharide', 'C₆H₁₂O₆ — component of lactose, brain glycolipids'],
+  ['Ribose',        'carb',    'Monosaccharide', 'C₅H₁₀O₅ — backbone of RNA, also in ATP/NADH'],
+  ['Deoxyribose',   'carb',    'Monosaccharide', 'C₅H₁₀O₄ — backbone of DNA, lacks 2-OH'],
+  ['Sucrose',       'carb',    'Disaccharide',   'Glucose + Fructose, table sugar, plant transport'],
+  ['Lactose',       'carb',    'Disaccharide',   'Glucose + Galactose, milk sugar'],
+  ['Maltose',       'carb',    'Disaccharide',   'Glucose + Glucose, starch breakdown product'],
+  ['Starch',        'carb',    'Polysaccharide', 'Amylose + Amylopectin, plant energy storage'],
+  ['Glycogen',      'carb',    'Polysaccharide', 'Highly branched glucose polymer, animal storage'],
+  ['Cellulose',     'carb',    'Polysaccharide', 'Beta-1,4 glucose, structural, indigestible'],
+  ['Chitin',        'carb',    'Polysaccharide', 'N-acetylglucosamine polymer, fungal/arthropod'],
+  // Lipids
+  ['Triglyceride',  'lipid',   'Lipid',          'Glycerol + 3 fatty acids, energy storage'],
+  ['Phospholipid',  'lipid',   'Lipid',          'Glycerol + 2 FA + phosphate, bilayer forming'],
+  ['Cholesterol',   'lipid',   'Sterol',         'Steroid ring, membrane fluidity, hormone precursor'],
+  ['Saturated FA',  'lipid',   'Fatty Acid',     'No double bonds, solid at room temp, e.g. palmitic'],
+  ['Unsaturated FA','lipid',   'Fatty Acid',     'One+ double bonds, liquid at room temp, e.g. oleic'],
+  ['Wax',           'lipid',   'Lipid',          'Fatty acid + long chain alcohol, waterproofing'],
+  // Proteins
+  ['Peptide Bond',  'protein', 'Protein',        'CO-NH bond, condensation between AA residues'],
+  ['Alpha Helix',   'protein', 'Structure',      'H-bonds within chain, every 4th residue, i to i+4'],
+  ['Beta Sheet',    'protein', 'Structure',      'H-bonds between strands, parallel/antiparallel'],
+  ['Haemoglobin',   'protein', 'Protein',        'Quaternary, 4 subunits, O₂ transport, contains haem'],
+  ['Insulin',       'protein', 'Protein',        '2 chains, disulfide bonds, blood glucose regulation'],
+  ['Collagen',      'protein', 'Protein',        'Triple helix, most abundant protein, connective tissue'],
+  ['Enzyme',        'protein', 'Protein',        'Biological catalyst, lowers activation energy, specific'],
+  // Nucleic Acids
+  ['ATP',           'nucleic', 'Nucleotide',     'Adenosine triphosphate, energy currency, 30.5 kJ/mol'],
+  ['NAD⁺/NADH',    'nucleic', 'Coenzyme',       'Electron carrier, oxidised/reduced form, redox reactions'],
+  ['DNA',           'nucleic', 'Nucleic Acid',   'Double helix, deoxyribose, ATCG, antiparallel strands'],
+  ['RNA',           'nucleic', 'Nucleic Acid',   'Single strand, ribose, AUCG, mRNA/tRNA/rRNA forms'],
+  ['mRNA',          'nucleic', 'Nucleic Acid',   'Messenger, carries genetic code from DNA to ribosome'],
+  ['tRNA',          'nucleic', 'Nucleic Acid',   'Transfer, anticodon loop, carries AA to ribosome'],
+  ['Nucleotide',    'nucleic', 'Nucleotide',     'Phosphate + sugar + base, monomer of nucleic acids'],
+  // Other
+  ['Haem Group',    'other',   'Prosthetic',     'Iron-containing porphyrin, O₂ and CO₂ binding'],
+  ['Coenzyme A',    'other',   'Coenzyme',       'Acetyl-CoA carrier, central to Krebs cycle'],
+  ['cAMP',          'other',   'Signalling',     'Second messenger, PKA activation, hormone response'],
+  ['Glutathione',   'other',   'Antioxidant',    'Tripeptide GSH, protects cells from oxidative stress'],
+];
+
+function buildBioMolecules() {
+  const grid = document.getElementById('bioGrid');
+  grid.innerHTML = BIO_MOLECULES.map(([name, cls, cat, detail]) => `
+    <div class="bio-card bio-${cls}">
+      <div class="bio-name">${name}</div>
+      <div class="bio-category">${cat}</div>
+      <div class="bio-detail">${detail}</div>
+    </div>`).join('');
+}
+buildBioMolecules();
+
+// ═══════════════════════════════════════════════
+//  STATISTICS FORMULAS
+// ═══════════════════════════════════════════════
+const STATS_CARDS = [
+  {
+    title: 'Binomial Distribution',
+    notation: 'X ~ B(n, p)',
+    formula: 'P(X=r) = C(n,r) · pʳ · (1-p)ⁿ⁻ʳ\n\nMean: np\nVariance: np(1-p)',
+    note: 'n = trials, p = P(success), r = successes. Fixed n, independent trials, constant p.'
+  },
+  {
+    title: 'Normal Distribution',
+    notation: 'X ~ N(μ, σ²)',
+    formula: 'Standardise:\nZ = (X - μ) / σ\n\nZ ~ N(0, 1)',
+    note: 'μ = mean, σ² = variance. Symmetric, bell-shaped. Use Z-tables for probabilities.'
+  },
+  {
+    title: 'Poisson Distribution',
+    notation: 'X ~ Po(λ)',
+    formula: 'P(X=r) = e⁻λ · λʳ / r!\n\nMean: λ\nVariance: λ',
+    note: 'λ = mean rate. Events rare, independent, constant rate. Approx. B(n,p) when n large, p small.'
+  },
+  {
+    title: 'Mean',
+    notation: 'x̄ = Σx / n',
+    formula: 'Grouped:\nx̄ = Σfx / Σf\n\nCombined:\n(n₁x̄₁ + n₂x̄₂) / (n₁+n₂)',
+    note: 'Sensitive to outliers. Use median for skewed data.'
+  },
+  {
+    title: 'Variance & SD',
+    notation: 'σ² = Sxx / n',
+    formula: 'Sxx = Σx² - (Σx)²/n\n\nσ = √σ²\n\nSample: s² = Sxx/(n-1)',
+    note: 'σ = population SD, s = sample SD. Variance in squared units.'
+  },
+  {
+    title: 'Probability Rules',
+    notation: 'P(A ∪ B)',
+    formula: 'P(A∪B) = P(A)+P(B)-P(A∩B)\n\nP(A|B) = P(A∩B) / P(B)\n\nP(A∩B) = P(A)·P(B|A)',
+    note: 'If independent: P(A∩B)=P(A)·P(B). Mutually exclusive: P(A∩B)=0.'
+  },
+  {
+    title: 'Hypothesis Testing',
+    notation: 'H₀ vs H₁',
+    formula: 'H₀: null hypothesis\nH₁: alternative\n\nReject H₀ if:\np-value < significance level',
+    note: 'One-tail: > or <. Two-tail: ≠. Significance levels: 1%, 5%, 10%.'
+  },
+  {
+    title: 'PMCC',
+    notation: 'r = Sxy / √(Sxx·Syy)',
+    formula: 'Sxy = Σxy - (Σx)(Σy)/n\nSxx = Σx² - (Σx)²/n\nSyy = Σy² - (Σy)²/n',
+    note: '-1 ≤ r ≤ 1. r=1 perfect positive, r=-1 perfect negative, r=0 no linear correlation.'
+  },
+  {
+    title: 'Regression Line',
+    notation: 'y = a + bx',
+    formula: 'b = Sxy / Sxx\n\na = ȳ - bx̄\n\nPasses through (x̄, ȳ)',
+    note: 'y on x — predicts y from x. Only extrapolate with caution. Interpolation preferred.'
+  },
+  {
+    title: 'Combinations',
+    notation: 'C(n,r) = ⁿCᵣ',
+    formula: 'C(n,r) = n! / (r!(n-r)!)\n\nP(n,r) = n! / (n-r)!\n(permutations)',
+    note: 'Combinations: order does not matter. Permutations: order matters.'
+  },
+  {
+    title: 'Normal Approximation',
+    notation: 'B(n,p) ≈ N(np, np(1-p))',
+    formula: 'Use when:\nn large, p not extreme\n\nContinuity correction:\nP(X=a) → P(a-0.5 < X < a+0.5)',
+    note: 'Also: Po(λ) ≈ N(λ, λ) when λ > 15. Always apply continuity correction.'
+  },
+  {
+    title: 'Coding',
+    notation: 'y = (x - a) / b',
+    formula: 'ȳ = (x̄ - a) / b\n\nσy² = σx² / b²\n\nReverse:\nx = by + a',
+    note: 'Simplifies calculations with large or awkward data values.'
+  },
+];
+
+function buildStats() {
+  const scroll = document.getElementById('statsScroll');
+  scroll.innerHTML = STATS_CARDS.map(c => `
+    <div class="stats-card">
+      <div class="stats-card-title">${c.title}</div>
+      <div class="stats-notation">${c.notation}</div>
+      <div class="stats-formula">${c.formula}</div>
+      <div class="stats-note">${c.note}</div>
+    </div>`).join('');
+}
+buildStats();
 
 // ═══════════════════════════════════════════════
 //  PERIODIC TABLE
