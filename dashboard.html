@@ -390,6 +390,198 @@
     color: var(--muted); text-transform: uppercase;
     text-align: center; padding: 6px 0; opacity: 0.6;
   }
+
+  /* ── VIRTUAL PET ── */
+  .pet-panel {
+    position: fixed;
+    bottom: calc(28px + 280px + 12px);
+    left: 28px;
+    z-index: 10;
+    width: 195px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 10px 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .pet-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245,158,11,0.2), transparent);
+  }
+  .pet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pet-title {
+    font-size: 9px; letter-spacing: 0.3em;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .pet-feed-btn {
+    font-size: 9px; letter-spacing: 0.15em;
+    color: var(--amber); text-transform: uppercase;
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 5px;
+    padding: 2px 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+  }
+  .pet-feed-btn:hover { background: rgba(245,158,11,0.2); }
+
+  /* Enclosure — where the pet roams */
+  .pet-stage {
+    position: relative;
+    height: 90px;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  /* The SVG creature */
+  .pet-creature {
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    width: 52px;
+    height: 52px;
+    transition: left 2.5s cubic-bezier(0.45,0,0.55,1),
+                transform 0.3s ease;
+    filter: drop-shadow(0 0 6px rgba(245,158,11,0.5));
+  }
+  .pet-creature.flip { transform: scaleX(-1); }
+  .pet-creature.happy {
+    filter: drop-shadow(0 0 12px rgba(245,158,11,0.9));
+    animation: petBounce 0.5s ease infinite alternate;
+  }
+  .pet-creature.sleeping {
+    filter: drop-shadow(0 0 4px rgba(245,158,11,0.2));
+    opacity: 0.6;
+  }
+  .pet-creature.hungry {
+    filter: drop-shadow(0 0 4px rgba(245,100,11,0.3));
+  }
+  @keyframes petBounce {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-6px); }
+  }
+
+  /* Body parts animated via CSS */
+  .pet-body-breathe {
+    animation: petBreathe 3s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes petBreathe {
+    0%,100% { transform: scaleY(1); }
+    50%      { transform: scaleY(1.04); }
+  }
+  .pet-wing-l {
+    animation: wingFlapL 4s ease-in-out infinite;
+    transform-origin: 70% 50%;
+  }
+  .pet-wing-r {
+    animation: wingFlapR 4s ease-in-out infinite;
+    transform-origin: 30% 50%;
+  }
+  @keyframes wingFlapL {
+    0%,100% { transform: rotate(0deg); }
+    50%     { transform: rotate(-8deg); }
+  }
+  @keyframes wingFlapR {
+    0%,100% { transform: rotate(0deg); }
+    50%     { transform: rotate(8deg); }
+  }
+  .pet-eye-l, .pet-eye-r {
+    animation: petBlink 5s ease-in-out infinite;
+    transform-origin: center;
+  }
+  .pet-eye-r { animation-delay: 0.05s; }
+  @keyframes petBlink {
+    0%,90%,100% { transform: scaleY(1); }
+    95%          { transform: scaleY(0.08); }
+  }
+  .pet-tail {
+    animation: tailWag 2s ease-in-out infinite;
+    transform-origin: 10% 50%;
+  }
+  @keyframes tailWag {
+    0%,100% { transform: rotate(0deg); }
+    33%     { transform: rotate(12deg); }
+    66%     { transform: rotate(-8deg); }
+  }
+  .pet-glow-belly {
+    animation: bellyPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes bellyPulse {
+    0%,100% { opacity: 0.5; }
+    50%     { opacity: 1; }
+  }
+
+  /* Zz sleep indicator */
+  .pet-zzz {
+    position: absolute;
+    top: 4px; right: 8px;
+    font-size: 11px;
+    color: rgba(245,158,11,0.5);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+  }
+  .pet-zzz.visible { opacity: 1; animation: floatZz 2s ease-in-out infinite; }
+  @keyframes floatZz {
+    0%,100% { transform: translateY(0); opacity: 0.5; }
+    50%     { transform: translateY(-4px); opacity: 1; }
+  }
+
+  /* Heart on click */
+  .pet-heart {
+    position: absolute;
+    font-size: 14px;
+    top: 20px; left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+    color: #f43f5e;
+  }
+  .pet-heart.pop { animation: heartPop 0.8s ease forwards; }
+  @keyframes heartPop {
+    0%   { opacity: 1; transform: translateX(-50%) translateY(0) scale(0.5); }
+    50%  { opacity: 1; transform: translateX(-50%) translateY(-16px) scale(1.2); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-28px) scale(0.8); }
+  }
+
+  /* Stat bars */
+  .pet-stats { display: flex; flex-direction: column; gap: 5px; }
+  .pet-stat-row {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .pet-stat-lbl {
+    font-size: 8px; letter-spacing: 0.18em;
+    color: var(--muted); text-transform: uppercase;
+    width: 52px; flex-shrink: 0;
+  }
+  .pet-stat-track {
+    flex: 1; height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px; overflow: hidden;
+  }
+  .pet-stat-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 0.8s ease, background 0.5s;
+  }
+  .pet-stat-fill.hunger-fill  { background: var(--amber); }
+  .pet-stat-fill.happy-fill   { background: #f43f5e; }
+  .pet-stat-fill.hunger-fill.low  { background: #f43f5e; }
+  .pet-stat-fill.happy-fill.low   { background: var(--muted); }
+
   /* ── TASK PANEL ── */
   .task-panel {
     position: fixed;
@@ -613,9 +805,12 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 10;
-    padding: 8px 16px 6px;
-    background: linear-gradient(180deg, rgba(8,8,16,0.97) 85%, transparent 100%);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 10px 16px 16px;
+    background: linear-gradient(180deg,
+      rgba(8,8,16,1) 0%,
+      rgba(8,8,16,0.95) 70%,
+      rgba(8,8,16,0.6) 88%,
+      transparent 100%);
   }
   .ptable-inner {
     display: grid;
@@ -852,13 +1047,14 @@
   .ref-tabs {
     display: flex;
     gap: 4px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    padding-left: 4px;
   }
   .ref-tab {
-    padding: 4px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
+    padding: 3px 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
     color: var(--muted);
     font-family: 'Syne', sans-serif;
     font-size: 9px; font-weight: 700;
@@ -867,11 +1063,11 @@
     cursor: pointer;
     transition: all 0.2s;
   }
-  .ref-tab:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
-  .ref-tab.active-pt    { background: rgba(245,158,11,0.15); color: var(--amber); border-color: rgba(245,158,11,0.3); }
-  .ref-tab.active-aa    { background: rgba(34,211,238,0.12); color: var(--cyan);  border-color: rgba(34,211,238,0.3); }
-  .ref-tab.active-bio   { background: rgba(74,222,128,0.12); color: #4ade80;      border-color: rgba(74,222,128,0.3); }
-  .ref-tab.active-stats { background: rgba(168,85,247,0.12); color: #c084fc;      border-color: rgba(168,85,247,0.3); }
+  .ref-tab:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+  .ref-tab.active-pt    { background: rgba(245,158,11,0.12); color: var(--amber); border-color: rgba(245,158,11,0.25); }
+  .ref-tab.active-aa    { background: rgba(34,211,238,0.10); color: var(--cyan);  border-color: rgba(34,211,238,0.25); }
+  .ref-tab.active-bio   { background: rgba(74,222,128,0.10); color: #4ade80;      border-color: rgba(74,222,128,0.25); }
+  .ref-tab.active-stats { background: rgba(168,85,247,0.10); color: #c084fc;      border-color: rgba(168,85,247,0.25); }
 
   /* Tab content panels */
   .ref-panel { display: none; }
@@ -1067,6 +1263,7 @@
     body { padding: 20px 16px; gap: 16px; }
     .task-panel { display: none; }
     .pi-panel { display: none; }
+    .pet-panel { display: none; }
     .ptable-wrap { display: none; }
   }
 </style>
@@ -1293,6 +1490,96 @@
   <div class="footer">v4.0 &nbsp;·&nbsp; pi stats</div>
 </div>
 
+<!-- VIRTUAL PET — above Pi stats -->
+<div class="pet-panel" id="petPanel">
+  <div class="pet-header">
+    <div class="pet-title">Companion</div>
+    <button class="pet-feed-btn" onclick="feedPet()">Feed</button>
+  </div>
+  <div class="pet-stage" id="petStage" onclick="petClick()">
+    <div class="pet-zzz" id="petZzz">z z z</div>
+    <div class="pet-heart" id="petHeart">♥</div>
+    <!-- SVG Dragon Hatchling -->
+    <svg class="pet-creature" id="petCreature" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+      <!-- Tail -->
+      <g class="pet-tail">
+        <path d="M10 36 Q2 40 4 48 Q8 44 12 42" fill="#c47a1e" opacity="0.85"/>
+      </g>
+      <!-- Left wing -->
+      <g class="pet-wing-l">
+        <path d="M16 22 Q6 14 8 28 Q12 24 16 26" fill="#d4891e" opacity="0.7"/>
+      </g>
+      <!-- Right wing -->
+      <g class="pet-wing-r">
+        <path d="M36 22 Q46 14 44 28 Q40 24 36 26" fill="#d4891e" opacity="0.7"/>
+      </g>
+      <!-- Body -->
+      <g class="pet-body-breathe">
+        <ellipse cx="26" cy="32" rx="13" ry="12" fill="#c47a1e"/>
+        <!-- Belly glow -->
+        <ellipse class="pet-glow-belly" cx="26" cy="34" rx="8" ry="7"
+          fill="rgba(245,158,11,0.45)"/>
+        <!-- Belly scales -->
+        <ellipse cx="26" cy="34" rx="6" ry="5" fill="#e8973a" opacity="0.6"/>
+      </g>
+      <!-- Neck -->
+      <ellipse cx="26" cy="22" rx="7" ry="8" fill="#c47a1e"/>
+      <!-- Head -->
+      <ellipse cx="26" cy="15" rx="10" ry="9" fill="#d4891e"/>
+      <!-- Snout -->
+      <ellipse cx="26" cy="19" rx="6" ry="4" fill="#c47a1e"/>
+      <!-- Nostril dots -->
+      <circle cx="24" cy="19" r="0.8" fill="#7a4a10" opacity="0.7"/>
+      <circle cx="28" cy="19" r="0.8" fill="#7a4a10" opacity="0.7"/>
+      <!-- Horns -->
+      <path d="M20 8 Q18 3 21 6" stroke="#a06010" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M32 8 Q34 3 31 6" stroke="#a06010" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- Eyes -->
+      <g class="pet-eye-l">
+        <ellipse cx="22" cy="14" rx="3" ry="3.2" fill="#1a0a00"/>
+        <ellipse cx="22" cy="14" rx="2" ry="2.2" fill="#ff8c00"/>
+        <circle cx="22" cy="14" r="1.1" fill="#1a0a00"/>
+        <circle cx="23" cy="13" r="0.5" fill="rgba(255,255,255,0.6)"/>
+      </g>
+      <g class="pet-eye-r">
+        <ellipse cx="30" cy="14" rx="3" ry="3.2" fill="#1a0a00"/>
+        <ellipse cx="30" cy="14" rx="2" ry="2.2" fill="#ff8c00"/>
+        <circle cx="30" cy="14" r="1.1" fill="#1a0a00"/>
+        <circle cx="31" cy="13" r="0.5" fill="rgba(255,255,255,0.6)"/>
+      </g>
+      <!-- Spines on back -->
+      <path d="M20 20 Q19 16 21 18" stroke="#e8973a" stroke-width="1" fill="none"/>
+      <path d="M26 18 Q25 13 27 16" stroke="#e8973a" stroke-width="1" fill="none"/>
+      <path d="M32 20 Q33 16 31 18" stroke="#e8973a" stroke-width="1" fill="none"/>
+      <!-- Legs -->
+      <ellipse cx="18" cy="42" rx="4" ry="3" fill="#c47a1e"/>
+      <ellipse cx="34" cy="42" rx="4" ry="3" fill="#c47a1e"/>
+      <!-- Claws -->
+      <path d="M15 44 Q14 46 15 45" stroke="#a06010" stroke-width="1" fill="none"/>
+      <path d="M18 45 Q17 47 18 46" stroke="#a06010" stroke-width="1" fill="none"/>
+      <path d="M21 44 Q22 46 21 45" stroke="#a06010" stroke-width="1" fill="none"/>
+      <path d="M31 44 Q30 46 31 45" stroke="#a06010" stroke-width="1" fill="none"/>
+      <path d="M34 45 Q33 47 34 46" stroke="#a06010" stroke-width="1" fill="none"/>
+      <path d="M37 44 Q38 46 37 45" stroke="#a06010" stroke-width="1" fill="none"/>
+    </svg>
+  </div>
+  <!-- Stats -->
+  <div class="pet-stats">
+    <div class="pet-stat-row">
+      <div class="pet-stat-lbl">Hunger</div>
+      <div class="pet-stat-track">
+        <div class="pet-stat-fill hunger-fill" id="petHungerBar" style="width:100%"></div>
+      </div>
+    </div>
+    <div class="pet-stat-row">
+      <div class="pet-stat-lbl">Happy</div>
+      <div class="pet-stat-track">
+        <div class="pet-stat-fill happy-fill" id="petHappyBar" style="width:100%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- PI STATS PANEL fixed bottom left -->
 <div class="pi-panel" id="piPanel">
   <div class="pi-panel-title">
@@ -1334,21 +1621,38 @@
   const ctx    = canvas.getContext('2d');
   let W = 0, H = 0;
 
-  // Orbs — rendered as radial canvas gradients
   const ORBS = [
     { xPct: -0.10, yPct: -0.20, size: 0.85, r: 245, g: 158, b: 11,  alpha: 0.22, spd: 0.0009, ph: 0.0   },
     { xPct:  0.90, yPct:  0.80, size: 0.72, r:  34, g: 211, b: 238, alpha: 0.18, spd: 0.0012, ph: 2.094 },
     { xPct:  0.55, yPct:  0.48, size: 0.50, r: 245, g: 158, b: 11,  alpha: 0.13, spd: 0.0007, ph: 4.189 },
   ];
 
-  // Particles
+  // Pre-built orb gradient cache — only rebuilt on resize, not every frame
+  let orbCache = [];
+
+  function buildOrbCache() {
+    orbCache = ORBS.map(o => {
+      const cx  = o.xPct * W;
+      const cy  = o.yPct * H;
+      const rad = o.size * Math.min(W, H) * 0.5;
+      const sx  = (o.size * W * 0.5) / rad;
+      const sy  = (o.size * H * 0.5) / rad;
+      // Create gradient once with alpha=1, use globalAlpha to pulse
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rad);
+      g.addColorStop(0,    `rgba(${o.r},${o.g},${o.b},1)`);
+      g.addColorStop(0.45, `rgba(${o.r},${o.g},${o.b},0.35)`);
+      g.addColorStop(1,    `rgba(${o.r},${o.g},${o.b},0)`);
+      return { grad: g, cx, cy, sx, sy, rad };
+    });
+  }
+
   const N = 55;
   let pts = [], conns = [];
-  const MAX_C = 6, C_DIST = 115, C_PROB = 0.003;
+  const MAX_C = 5, C_DIST = 115, C_PROB = 0.002;
 
   function mkPt(bottom) {
     const t = Math.random();
-    const type = t < 0.08 ? 1 : t < 0.14 ? 2 : 0; // 0=white 1=amber 2=cyan
+    const type = t < 0.08 ? 1 : t < 0.14 ? 2 : 0;
     return {
       x: Math.random() * W,
       y: bottom ? H + Math.random() * 60 : Math.random() * H,
@@ -1359,9 +1663,14 @@
       type, ph: Math.random() * 6.28, ps: 0.007 + Math.random() * 0.011,
     };
   }
-  function rgb(type) {
-    return type === 1 ? [245,158,11] : type === 2 ? [34,211,238] : [200,215,235];
-  }
+
+  // Pre-built RGB lookup — avoids array allocation every frame
+  const RGB = [
+    [200, 215, 235],
+    [245, 158, 11],
+    [34,  211, 238],
+  ];
+
   function init() {
     pts   = Array.from({length: N}, () => mkPt(false));
     conns = [];
@@ -1370,6 +1679,7 @@
   function resize() {
     W = canvas.width  = window.innerWidth;
     H = canvas.height = window.innerHeight;
+    buildOrbCache(); // Rebuild gradients only on resize
   }
 
   // 30fps throttle
@@ -1380,73 +1690,71 @@
     last = ts;
     ctx.clearRect(0, 0, W, H);
 
-    // ── Orbs ──
-    ORBS.forEach(o => {
+    // ── Orbs — reuse cached gradients, pulse via globalAlpha ──
+    ORBS.forEach((o, i) => {
       o.ph += o.spd;
       const pulse = 0.82 + 0.18 * Math.sin(o.ph);
-      const cx = o.xPct * W, cy = o.yPct * H;
-      const rad = o.size * Math.min(W, H) * 0.5;
-      const sx = (o.size * W * 0.5) / rad;
-      const sy = (o.size * H * 0.5) / rad;
+      const oc = orbCache[i];
+      if (!oc) return;
       ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(sx, sy);
-      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rad);
-      g.addColorStop(0,    `rgba(${o.r},${o.g},${o.b},${(o.alpha * pulse).toFixed(3)})`);
-      g.addColorStop(0.45, `rgba(${o.r},${o.g},${o.b},${(o.alpha * pulse * 0.35).toFixed(3)})`);
-      g.addColorStop(1,    `rgba(${o.r},${o.g},${o.b},0)`);
+      ctx.globalAlpha = o.alpha * pulse;
+      ctx.translate(oc.cx, oc.cy);
+      ctx.scale(oc.sx, oc.sy);
       ctx.beginPath();
-      ctx.arc(0, 0, rad, 0, 6.2832);
-      ctx.fillStyle = g;
+      ctx.arc(0, 0, oc.rad, 0, 6.2832);
+      ctx.fillStyle = oc.grad;
       ctx.fill();
       ctx.restore();
     });
+    // globalAlpha is restored by ctx.restore() above
 
-    // ── Connection flares ──
-    conns = conns.filter(c => c.life < c.max);
-    conns.forEach(c => {
+    // ── Connection flares — hard cap to prevent accumulation ──
+    if (conns.length > MAX_C) conns.length = MAX_C;
+    for (let i = conns.length - 1; i >= 0; i--) {
+      const c = conns[i];
       c.life++;
+      if (c.life >= c.max) { conns.splice(i, 1); continue; }
       const alpha = Math.sin((c.life / c.max) * Math.PI) * 0.14;
       const pa = pts[c.a], pb = pts[c.b];
-      if (!pa || !pb) return;
+      if (!pa || !pb) { conns.splice(i, 1); continue; }
       ctx.beginPath();
       ctx.moveTo(pa.x, pa.y);
       ctx.lineTo(pb.x, pb.y);
-      ctx.strokeStyle = `rgba(245,158,11,${alpha.toFixed(3)})`;
+      ctx.strokeStyle = `rgba(245,158,11,${alpha.toFixed(2)})`;
       ctx.lineWidth = 0.6;
       ctx.stroke();
-    });
+    }
 
     // ── Particles ──
-    pts.forEach((p, i) => {
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
       p.ph += p.ps;
       p.x  += p.vx;
       p.y  += p.vy;
       if (p.x < -20) p.x = W + 10;
       if (p.x > W + 20) p.x = -10;
-      if (p.y < -12) { pts[i] = mkPt(true); return; }
+      if (p.y < -12) { pts[i] = mkPt(true); continue; }
 
       let a = p.a;
       if (p.y < H * 0.1) a *= p.y / (H * 0.1);
       if (p.type !== 0)   a *= 0.5 + 0.5 * Math.sin(p.ph);
 
-      const [r, g, b] = rgb(p.type);
+      const col = RGB[p.type];
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, 6.2832);
-      ctx.fillStyle = `rgba(${r},${g},${b},${a.toFixed(3)})`;
+      ctx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},${a.toFixed(2)})`;
       ctx.fill();
 
+      // Simple glow — flat circle instead of radial gradient (no object allocation)
       if (p.type !== 0 && a > 0.09) {
-        const gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
-        gr.addColorStop(0, `rgba(${r},${g},${b},${(a * 0.22).toFixed(3)})`);
-        gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r * 5, 0, 6.2832);
-        ctx.fillStyle = gr;
+        ctx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},${(a * 0.06).toFixed(2)})`;
         ctx.fill();
       }
 
-      if (conns.length < MAX_C && Math.random() < C_PROB) {
+      // Spawn connection — only if well below MAX_C
+      if (conns.length < MAX_C - 1 && Math.random() < C_PROB) {
         const j = Math.floor(Math.random() * N);
         if (j !== i) {
           const dx = p.x - pts[j].x, dy = p.y - pts[j].y;
@@ -1455,7 +1763,7 @@
           }
         }
       }
-    });
+    }
   }
 
   resize();
@@ -1937,25 +2245,46 @@ const ZONES  = [
 ];
 function pad(n){ return String(n).padStart(2,'0'); }
 
+// Cache DOM references — avoids getElementById every second
+const elHH   = document.getElementById('clockHH');
+const elMM   = document.getElementById('clockMM');
+const elSS   = document.getElementById('clockSS');
+const elDate = document.getElementById('dateDisplay');
+const tzEls  = ZONES.map(z => ({
+  time: document.getElementById(`tz-${z.id}`),
+  off:  document.getElementById(`od-${z.id}`),
+  iana: z.iana,
+  id:   z.id,
+}));
+
+// Only update world clocks when minute changes
+let lastMin = -1;
+
 function updateClock(){
   const now = new Date();
-  document.getElementById('clockHH').textContent = pad(now.getHours());
-  document.getElementById('clockMM').textContent = pad(now.getMinutes());
-  document.getElementById('clockSS').textContent = pad(now.getSeconds());
-  document.getElementById('dateDisplay').textContent =
-    `${DAYS[now.getDay()]}  ·  ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+  elHH.textContent = pad(h);
+  elMM.textContent = pad(m);
+  elSS.textContent = pad(s);
 
-  const londonDate = now.toLocaleDateString('en-GB', {timeZone:'Europe/London'});
-  ZONES.forEach(z => {
-    document.getElementById(`tz-${z.id}`).textContent =
-      now.toLocaleTimeString('en-GB', {timeZone:z.iana, hour:'2-digit', minute:'2-digit', hour12:false});
-    const zd  = now.toLocaleDateString('en-GB', {timeZone:z.iana});
-    const odEl = document.getElementById(`od-${z.id}`);
-    if (z.id === 'london' || zd === londonDate) { odEl.textContent = ''; return; }
-    const parse = s => { const [d,m,y] = s.split('/').map(Number); return new Date(y,m-1,d); };
-    const diff  = Math.round((parse(zd)-parse(londonDate))/86400000);
-    odEl.textContent = diff > 0 ? `+${diff}d` : `${diff}d`;
-  });
+  // Only update date and world clocks when minute ticks over
+  if (m !== lastMin) {
+    lastMin = m;
+    elDate.textContent =
+      `${DAYS[now.getDay()]}  ·  ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+    const londonDate = now.toLocaleDateString('en-GB', {timeZone:'Europe/London'});
+    tzEls.forEach(z => {
+      z.time.textContent = now.toLocaleTimeString('en-GB',
+        {timeZone:z.iana, hour:'2-digit', minute:'2-digit', hour12:false});
+      if (z.id === 'london') { z.off.textContent = ''; return; }
+      const zd = now.toLocaleDateString('en-GB', {timeZone:z.iana});
+      if (zd === londonDate) { z.off.textContent = ''; return; }
+      const parse = s => { const [d,m,y] = s.split('/').map(Number); return new Date(y,m-1,d); };
+      const diff  = Math.round((parse(zd)-parse(londonDate))/86400000);
+      z.off.textContent = diff > 0 ? `+${diff}d` : `${diff}d`;
+    });
+  }
 }
 updateClock();
 setInterval(updateClock, 1000);
@@ -2011,6 +2340,7 @@ function onComplete(){
     document.getElementById('statFocused').textContent=focMin+'m';
     document.getElementById('statStreak').textContent=streak;
     renderDots();
+    petPomoBoost();
     setMode(sessions%4===0?'long':'short');
   } else { setMode('focus'); }
 }
@@ -2034,9 +2364,15 @@ function renderDots(){
 // ═══════════════════════════════════════════════
 //  AUDIO + FLASH
 // ═══════════════════════════════════════════════
+let _audioCtx = null;
+function getAudioCtx() {
+  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _audioCtx;
+}
+
 function playBeep(){
   try{
-    const ac=new(window.AudioContext||window.webkitAudioContext)();
+    const ac = getAudioCtx();
     [[523.25,0],[659.25,0.18],[783.99,0.36]].forEach(([f,d])=>{
       const o=ac.createOscillator(),g=ac.createGain();
       o.connect(g);g.connect(ac.destination);
@@ -2054,6 +2390,174 @@ function flash(){
   el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');
 }
 
+
+
+// ═══════════════════════════════════════════════
+//  VIRTUAL PET
+// ═══════════════════════════════════════════════
+const PET_KEY = 'ctrlhub_pet';
+const PET_STAGE_W = 171; // stage width minus creature width (195 - 24px padding - 52px creature)
+
+let pet = {
+  hunger:   100,
+  happy:    100,
+  lastSeen: Date.now(),
+};
+
+// How much stats decay per hour away
+const HUNGER_DECAY_PER_HOUR = 12;
+const HAPPY_DECAY_PER_HOUR  = 8;
+
+let petState    = 'idle'; // idle, happy, sleeping, hungry
+let petFlipped  = false;
+let petX        = 20;
+let petWalkTimer = null;
+let petIdleTimer = null;
+let petSleepTimer = null;
+const SLEEP_AFTER_MS = 20 * 60 * 1000; // 20 mins no interaction
+
+function loadPet() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PET_KEY));
+    if (saved) {
+      pet = saved;
+      // Calculate decay since last seen
+      const hoursAway = (Date.now() - pet.lastSeen) / 3600000;
+      pet.hunger = Math.max(0, pet.hunger - hoursAway * HUNGER_DECAY_PER_HOUR);
+      pet.happy  = Math.max(0, pet.happy  - hoursAway * HAPPY_DECAY_PER_HOUR);
+    }
+  } catch(e) {}
+}
+
+function savePet() {
+  pet.lastSeen = Date.now();
+  localStorage.setItem(PET_KEY, JSON.stringify(pet));
+}
+
+function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+function updatePetBars() {
+  const hb = document.getElementById('petHungerBar');
+  const hpb = document.getElementById('petHappyBar');
+  hb.style.width  = pet.hunger + '%';
+  hpb.style.width = pet.happy  + '%';
+  hb.className  = 'pet-stat-fill hunger-fill' + (pet.hunger < 25 ? ' low' : '');
+  hpb.className = 'pet-stat-fill happy-fill'  + (pet.happy  < 25 ? ' low' : '');
+}
+
+function setPetState(state) {
+  const el = document.getElementById('petCreature');
+  const zzz = document.getElementById('petZzz');
+  el.classList.remove('happy', 'sleeping', 'hungry');
+  zzz.classList.remove('visible');
+  petState = state;
+  if (state === 'happy')    { el.classList.add('happy'); }
+  if (state === 'sleeping') { el.classList.add('sleeping'); zzz.classList.add('visible'); }
+  if (state === 'hungry')   { el.classList.add('hungry'); }
+}
+
+function decidePetState() {
+  if (pet.hunger < 20) { setPetState('hungry'); return; }
+  if (pet.happy  < 20) { setPetState('hungry'); return; } // visually same — drooping
+  setPetState('idle');
+}
+
+function petWalkTo(x) {
+  const el = document.getElementById('petCreature');
+  const newX = clamp(x, 0, PET_STAGE_W);
+  // Flip direction
+  if (newX > petX && petFlipped)  { petFlipped = false; el.classList.remove('flip'); }
+  if (newX < petX && !petFlipped) { petFlipped = true;  el.classList.add('flip'); }
+  petX = newX;
+  el.style.left = petX + 'px';
+}
+
+function schedulePetWalk() {
+  clearTimeout(petWalkTimer);
+  if (petState === 'sleeping') return;
+  const delay = 3000 + Math.random() * 5000;
+  petWalkTimer = setTimeout(() => {
+    if (petState !== 'sleeping') {
+      const newX = Math.random() * PET_STAGE_W;
+      petWalkTo(newX);
+      schedulePetWalk();
+    }
+  }, delay);
+}
+
+function scheduleSleep() {
+  clearTimeout(petSleepTimer);
+  petSleepTimer = setTimeout(() => {
+    setPetState('sleeping');
+    clearTimeout(petWalkTimer);
+  }, SLEEP_AFTER_MS);
+}
+
+function petClick() {
+  if (petState === 'sleeping') {
+    // Wake up
+    setPetState('idle');
+    schedulePetWalk();
+  }
+  // Show heart
+  const heart = document.getElementById('petHeart');
+  heart.classList.remove('pop');
+  void heart.offsetWidth;
+  heart.classList.add('pop');
+  // Boost happiness
+  pet.happy = clamp(pet.happy + 10, 0, 100);
+  updatePetBars();
+  savePet();
+  // Briefly happy state
+  setPetState('happy');
+  clearTimeout(petIdleTimer);
+  petIdleTimer = setTimeout(() => decidePetState(), 2000);
+  // Reset sleep timer
+  scheduleSleep();
+}
+
+function feedPet() {
+  pet.hunger = clamp(pet.hunger + 30, 0, 100);
+  pet.happy  = clamp(pet.happy  + 5,  0, 100);
+  updatePetBars();
+  savePet();
+  if (petState === 'sleeping') {
+    setPetState('idle');
+    schedulePetWalk();
+  }
+  setPetState('happy');
+  clearTimeout(petIdleTimer);
+  petIdleTimer = setTimeout(() => decidePetState(), 2000);
+  scheduleSleep();
+}
+
+// Called when Pomodoro session completes
+function petPomoBoost() {
+  pet.happy = clamp(pet.happy + 15, 0, 100);
+  updatePetBars();
+  savePet();
+  if (petState !== 'sleeping') {
+    setPetState('happy');
+    clearTimeout(petIdleTimer);
+    petIdleTimer = setTimeout(() => decidePetState(), 3000);
+  }
+}
+
+// Slow stat decay — runs every 5 minutes
+function petDecayTick() {
+  pet.hunger = clamp(pet.hunger - 1, 0, 100);
+  pet.happy  = clamp(pet.happy  - 0.7, 0, 100);
+  updatePetBars();
+  savePet();
+  decidePetState();
+}
+
+loadPet();
+updatePetBars();
+decidePetState();
+schedulePetWalk();
+scheduleSleep();
+setInterval(petDecayTick, 5 * 60 * 1000);
 
 // ═══════════════════════════════════════════════
 //  TASK TRACKER
@@ -2214,40 +2718,23 @@ renderTasks();
 //  PI STATS
 // ═══════════════════════════════════════════════
 const PI_URL = 'http://localhost:5050/stats';
+let piStatsInterval = null;
+let lastPiData = {};
+
+// Cache Pi stats DOM elements
+const piDotEl    = document.getElementById('piDot');
+const piInnerEl  = document.getElementById('piStatsInner');
 
 function barClass(val, warnAt, critAt) {
   if (val >= critAt) return 'crit';
   if (val >= warnAt) return 'warn';
   return '';
 }
-
 function tempClass(t) {
   if (t >= 75) return 'crit';
   if (t >= 60) return 'warn';
   return 'cyan';
 }
-
-function statRow(label, val, pct, barCls) {
-  return `
-  <div class="pi-stat-row">
-    <div class="pi-stat-top">
-      <div class="pi-stat-name">${label}</div>
-      <div class="pi-stat-val">${val}</div>
-    </div>
-    <div class="pi-bar-track">
-      <div class="pi-bar-fill ${barCls}" style="width:${pct}%"></div>
-    </div>
-  </div>`;
-}
-
-function infoRow(label, val) {
-  return `
-  <div class="pi-info-row">
-    <div class="pi-info-name">${label}</div>
-    <div class="pi-info-val">${val}</div>
-  </div>`;
-}
-
 function formatUptime(secs) {
   const h = Math.floor(secs / 3600);
   const m = Math.floor((secs % 3600) / 60);
@@ -2255,12 +2742,32 @@ function formatUptime(secs) {
   return `${m}m`;
 }
 
+function statRow(label, val, pct, barCls) {
+  return `<div class="pi-stat-row">
+    <div class="pi-stat-top">
+      <div class="pi-stat-name">${label}</div>
+      <div class="pi-stat-val">${val}</div>
+    </div>
+    <div class="pi-bar-track"><div class="pi-bar-fill ${barCls}" style="width:${pct}%"></div></div>
+  </div>`;
+}
+function infoRow(label, val) {
+  return `<div class="pi-info-row">
+    <div class="pi-info-name">${label}</div>
+    <div class="pi-info-val">${val}</div>
+  </div>`;
+}
+
 async function fetchPiStats() {
+  // Manual timeout — AbortSignal.timeout not supported in all browsers
+  const controller = new AbortController();
+  const timeoutId  = setTimeout(() => controller.abort(), 2500);
   try {
-    const res  = await fetch(PI_URL, { signal: AbortSignal.timeout(2500) });
+    const res  = await fetch(PI_URL, { signal: controller.signal });
+    clearTimeout(timeoutId);
     const data = await res.json();
 
-    document.getElementById('piDot').className = 'pi-dot live';
+    piDotEl.className = 'pi-dot live';
 
     const cpuPct  = Math.round(data.cpu);
     const ramPct  = Math.round(data.ram);
@@ -2269,23 +2776,30 @@ async function fetchPiStats() {
     const ip      = data.ip || '—';
     const uptime  = formatUptime(data.uptime);
 
-    document.getElementById('piStatsInner').innerHTML =
-      statRow('CPU',  cpuPct + '%',  cpuPct, barClass(cpuPct, 70, 90)) +
-      statRow('RAM',  ramPct + '%',  ramPct, barClass(ramPct, 70, 90)) +
-      statRow('Temp', temp + '°C',   Math.min(temp, 100), tempClass(temp)) +
-      infoRow('Freq',   freqMhz + ' MHz') +
-      infoRow('IP',     ip) +
-      infoRow('Uptime', uptime);
-
-  } catch (e) {
-    document.getElementById('piDot').className = 'pi-dot dead';
-    document.getElementById('piStatsInner').innerHTML =
-      '<div class="pi-offline">Server offline</div>';
+    // Only rebuild DOM if values changed — prevents unnecessary repaints
+    const key = `${cpuPct}${ramPct}${temp}${freqMhz}${uptime}`;
+    if (key !== lastPiData.key) {
+      lastPiData.key = key;
+      piInnerEl.innerHTML =
+        statRow('CPU',  cpuPct + '%',  cpuPct, barClass(cpuPct, 70, 90)) +
+        statRow('RAM',  ramPct + '%',  ramPct, barClass(ramPct, 70, 90)) +
+        statRow('Temp', temp + '°C',   Math.min(temp, 100), tempClass(temp)) +
+        infoRow('Freq',   freqMhz + ' MHz') +
+        infoRow('IP',     ip) +
+        infoRow('Uptime', uptime);
+    }
+  } catch(e) {
+    clearTimeout(timeoutId);
+    if (piDotEl.className !== 'pi-dot dead') {
+      piDotEl.className = 'pi-dot dead';
+      piInnerEl.innerHTML = '<div class="pi-offline">Server offline</div>';
+    }
+    lastPiData = {};
   }
 }
 
 fetchPiStats();
-setInterval(fetchPiStats, 3000);
+setInterval(fetchPiStats, 10000);
 
 renderDots(); upDisp(); upRing();
 </script>
